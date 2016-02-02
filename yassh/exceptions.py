@@ -1,0 +1,5 @@
+class AlreadyStartedException(Exception):
+    '''
+    '''
+    pass
+
