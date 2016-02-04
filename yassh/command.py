@@ -103,9 +103,13 @@ class Command(object):
 
         self.reactor.unregister_command(self)
         self.ssh.close()
+        if self.ssh.exitstatus:
+            self.result = self.ssh.exitstatus
+        else:
+            self.result = -1
         self.ssh = None
 
-        _logger.info('stopped command "%s"', self.name)
+        _logger.info('stopped command "%s (%d)"', self.name, self.result)
 
     def started(self):
         '''

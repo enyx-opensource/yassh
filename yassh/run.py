@@ -23,21 +23,20 @@ SOFTWARE.
 '''
 
 import logging
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
 
-logging.getLogger(__name__).addHandler(NullHandler())
+from .command import Command
+from .reactor import Reactor
 
-from .reactor import *
-from .command import *
-from .run import *
-from .exceptions import *
+_logger = logging.getLogger(__name__)
 
-__all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run']
+def run(host, username, cmd, logfile=None, timeout=-1):
+    '''
+    '''
+    r = Reactor()
+    c = Command(cmd, r, host, username, cmd, logfile)
 
-__version__ = '0.1.dev'
+    with c:
+        r.run(timeout)
+
+    return c.result
 
