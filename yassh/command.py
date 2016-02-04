@@ -3,7 +3,7 @@ import pexpect
 
 from .exceptions import AlreadyStartedException
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class Command(object):
     '''
@@ -19,20 +19,17 @@ class Command(object):
         self.cmd = cmd
         self.ssh = None
 
-        if logfile:
-            self.logfile = open(logfile, 'w')
+        self.logfile = logfile
 
         self.monitors = {}
 
-        logger.debug('created command "%s" as "%s" on %s@%s',
+        _logger.debug('created command "%s" as "%s" on %s@%s',
                      name, cmd, username, host)
 
     def __del__(self):
         '''
         '''
         self.stop()
-        if self.logfile:
-            self.logfile.close()
 
     def __enter__(self):
         '''
@@ -49,7 +46,7 @@ class Command(object):
     def start(self):
         '''
         '''
-        if started():
+        if self.started():
             raise AlreadyStartedException()
 
         cmd = 'ssh -l {0} -o BatchMode=yes {1} "{2}"'.format(self.username,
@@ -59,18 +56,32 @@ class Command(object):
 
         self.reactor.register_command(self)
 
-        logger.info('started command "%s"', self.name)
+        _logger.info('started command "%s"', self.name)
+
+    def terminate(self):
+        '''
+        The process is killed but any pending monitor(s)
+        can still be called (e.g. on_exit)
+        '''
+        if not self.started():
+            return
+
+        self.ssh.terminate()
+
+        _logger.info('terminated command "%s"', self.name)
 
     def stop(self):
         '''
+        The process is killed and any pending monitor is discarded.
         '''
-        if self.ssh:
-            self.reactor.unregister_command(self)
-            self.ssh.close()
+        if not self.started():
+            return
 
-        logger.info('stopped command "%s"', self.name)
+        self.reactor.unregister_command(self)
+        self.ssh.close()
+        self.ssh = None
 
-        return self.ssh.exitstatus
+        _logger.info('stopped command "%s"', self.name)
 
     def started(self):
         '''
@@ -87,7 +98,12 @@ class Command(object):
         '''
         self.monitors.setdefault(pattern, []).append(callback)
 
-        logger.debug('registered monitor "%s" on %s', pattern, self.name)
+        _logger.debug('registered monitor "%s" on %s', pattern, self.name)
+
+    def register_exit_monitor(self, callback):
+        '''
+        '''
+        self.register_monitor(pexpect.EOF, callback)
 
     def process_output(self):
         '''
@@ -101,20 +117,19 @@ class Command(object):
             if self.logfile:
                 self.logfile.write(self.ssh.before)
 
-            self.__invoke_callbacks(patterns[index])
+            self._invoke_callbacks(patterns[index])
 
     def __repr__(self):
         '''
         '''
         return 'command {0}'.format(self.name)
 
-    def __invoke_callbacks(self, matched_pattern):
+    def _invoke_callbacks(self, matched_pattern):
         '''
         '''
-        logger.debug('matched monitor "%s" on "%s"',
-                     matched_pattern, self.name)
+        _logger.debug('matched monitor "%s" on "%s"',
+                      matched_pattern, self.name)
 
         for callback in self.monitors[matched_pattern]:
             callback()
-
 

@@ -2,7 +2,7 @@ import logging
 import errno
 import select
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class Reactor(object):
     '''
@@ -13,6 +13,12 @@ class Reactor(object):
         '''
         self.poller = select.poll()
         self.fd_to_cmd = {}
+        self.stopped = False
+
+    def stop(self):
+        '''
+        '''
+        self.stopped = True
 
     def register_command(self, cmd):
         '''
@@ -20,7 +26,7 @@ class Reactor(object):
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
         self.fd_to_cmd[cmd.fileno()] = cmd
 
-        logger.debug('registered command "%s"', cmd)
+        _logger.debug('registered command "%s"', cmd)
 
     def unregister_command(self, cmd):
         '''
@@ -28,11 +34,14 @@ class Reactor(object):
         del self.fd_to_cmd[cmd.fileno()]
         self.poller.unregister(cmd)
 
-        logger.debug('unregistered command "%s"', cmd)
+        _logger.debug('unregistered command "%s"', cmd)
 
-    def __run(self, ms_timeout):
+    def _run(self, ms_timeout):
         '''
         '''
+        if self.stopped:
+            return 0
+
         count = self.poller.poll(ms_timeout)
         for fd, _ in count:
             cmd = self.fd_to_cmd.get(fd, None)
@@ -45,7 +54,7 @@ class Reactor(object):
         '''
         '''
         try:
-            return self.__run(ms_timeout)
+            return self._run(ms_timeout)
         except select.error as err:
             if err[0] == errno.EINTR:
                 return 0
