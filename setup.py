@@ -1,12 +1,22 @@
 import os
+import re
 from setuptools import setup
 
+HERE = os.path.dirname(__file__)
+
 def readme():
-    return open(os.path.join(os.path.dirname(__file__), 'README')).read()
+    return open(os.path.join(HERE, 'README.md')).read()
+
+def version():
+    with open(os.path.join(HERE, 'yassh', '__init__.py')) as f:
+        return re.search(r"__version__ = '([^']+)'", f.read()).group(1)
 
 setup(
     name = 'yassh',
-    version = '0.1.0',
+    version = version(),
+    install_requires = [
+        "pexpect"
+    ],
     author = 'David Keller',
     author_email = 'david.keller@enyx.com',
     description = 'A process remote launcher.',
@@ -17,3 +27,4 @@ setup(
     platforms='UNIX',
     long_description=readme()
 )
+
