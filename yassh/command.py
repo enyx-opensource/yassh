@@ -47,6 +47,8 @@ class Command(object):
 
         self.monitors = {}
 
+        self.result = -1
+
         _logger.debug('created command "%s" as "%s" on %s@%s',
                      name, cmd, username, host)
 
@@ -105,8 +107,7 @@ class Command(object):
         self.ssh.close()
         if self.ssh.exitstatus:
             self.result = self.ssh.exitstatus
-        else:
-            self.result = -1
+
         self.ssh = None
 
         _logger.info('stopped command "%s (%d)"', self.name, self.result)
