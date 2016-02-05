@@ -11,7 +11,7 @@ def parse_args():
     return parser.parse_args()
 
 def main(args):
-    return subprocess.call(args.cmd, shell=True)
+    return subprocess.call('bash -c "{0}"'.format(args.cmd), shell=True)
 
 if __name__ == "__main__":
     main(parse_args())

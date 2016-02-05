@@ -75,9 +75,10 @@ class Command(object):
         if self.started():
             raise AlreadyStartedException()
 
-        cmd = 'ssh -l {0} -o BatchMode=yes {1} "{2}"'.format(self.username,
-                                                             self.host,
-                                                             self.cmd)
+        cmd = ('ssh -l {0} -o BatchMode=yes '
+               '{1} "({2})< <(cat; kill 0)"').format(self.username,
+                                                     self.host,
+                                                     self.cmd)
         self.ssh = pexpect.spawn(cmd)
 
         self.reactor.register_command(self)
