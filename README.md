@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Enyx-SA/yassh.svg?branch=master)](https://travis-ci.org/Enyx-SA/yassh)
+
 Overview
 ========
 
