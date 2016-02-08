@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/Enyx-SA/yassh.svg?branch=master)](https://travis-ci.org/Enyx-SA/yassh)
+[![Coverage Status](https://coveralls.io/repos/github/Enyx-SA/yassh/badge.svg?branch=master)](https://coveralls.io/github/Enyx-SA/yassh?branch=master)
+
 
 Overview
 ========
