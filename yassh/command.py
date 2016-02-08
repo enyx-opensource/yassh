@@ -139,7 +139,7 @@ class Command(object):
     def process_output(self):
         '''
         '''
-        patterns = [pexpect.TIMEOUT] + self.monitors.keys()
+        patterns = [pexpect.TIMEOUT] + list(self.monitors.keys())
         index = self.ssh.expect(patterns, timeout = 0)
 
         if index:
