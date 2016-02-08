@@ -1,6 +1,7 @@
 .. image:: https://travis-ci.org/Enyx-SA/yassh.svg?branch=master
    :target: https://travis-ci.org/Enyx-SA/yassh
    :alt: Build Status
+   
 .. image:: https://coveralls.io/repos/github/Enyx-SA/yassh/badge.svg?branch=master
    :target: https://coveralls.io/github/Enyx-SA/yassh?branch=master
    :alt: Coverage Status
@@ -15,6 +16,7 @@ Usage
 -----
 
 .. code:: python
+
     from yassh import *
 
     r = Reactor()
@@ -47,17 +49,20 @@ Usage
 Installation
 ------------
 
-To install latest release::
-    $pip install yassh
+To install latest release
+::
+    pip install yassh
 
-To install latest code::
-    $pip install git+https://github.com/Enyx-SA/yassh.git
+To install latest code
+::
+    pip install git+https://github.com/Enyx-SA/yassh.git
 
 Testing
 -------
 
-Run from project root::
-    $behave
+Run from project root
+::
+    behave
 
 License
 -------
