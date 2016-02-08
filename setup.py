@@ -5,7 +5,7 @@ from setuptools import setup
 HERE = os.path.dirname(__file__)
 
 def _readme():
-    with open(os.path.join(HERE, 'README.md')) as f:
+    with open(os.path.join(HERE, 'README.rst')) as f:
         return f.read()
 
 def _version():
