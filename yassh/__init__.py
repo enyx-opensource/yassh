@@ -35,9 +35,10 @@ logging.getLogger(__name__).addHandler(NullHandler())
 from .reactor import *
 from .command import *
 from .run import *
+from .context import *
 from .exceptions import *
 
-__all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run']
+__all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run', 'Context']
 
 __version__ = '0.1.dev'
 

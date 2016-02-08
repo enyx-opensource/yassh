@@ -35,8 +35,12 @@ def run(host, username, cmd, logfile=None, timeout=-1):
     r = Reactor()
     c = Command(cmd, r, host, username, cmd, logfile)
 
+    def on_exit(): r.stop()
+    c.register_exit_monitor(on_exit)
+
     with c:
-        r.run(timeout)
+        while r.run(timeout) > 0:
+            pass
 
     return c.result
 
