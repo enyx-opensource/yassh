@@ -33,10 +33,10 @@ Usage
     c2.register_monitor('ok', on_c2_ok)
 
     # Stop reactor when cmd3 complete
-    on_c3_exit(): r.stop()
+    def on_c3_exit(): r.stop()
     c3.register_exit_monitor(on_c3_exit)
     # Print dummy message when c3 is near terminaison
-    on_c3_finished(): print 'c3 almost finished'
+    def on_c3_finished(): print 'c3 almost finished'
     c3.register_monitor('finished', on_c3_finished)
 
     # Start first task
@@ -49,19 +49,19 @@ Usage
 Installation
 ------------
 
-To install latest release
-::
+To install latest release::
+
     pip install yassh
 
-To install latest code
-::
+To install latest code::
+
     pip install git+https://github.com/Enyx-SA/yassh.git
 
 Testing
 -------
 
-Run from project root
-::
+Run from project root::
+
     behave
 
 License
