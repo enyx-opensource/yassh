@@ -31,10 +31,23 @@ _logger = logging.getLogger(__name__)
 
 class Command(object):
     '''
+    This class is used to run a shell command.
+
+    Attributes:
+        result (int): The return code of the shell command.
     '''
 
     def __init__(self, name, reactor, host, username, cmd, logfile=None):
         '''
+        Create a new shell command without starting it.
+
+        Args:
+            name (str): The name of this command. Used by __repr__() method.
+            reactor (Reactor): The reactor used to execute monitors.
+            host (str): The host used to run the shell command.
+            username (str): The username used to to run the shell command.
+            cmd (str): A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
+            logfile (stream): A file object used to log shell command output.
         '''
         self.name = name
         self.reactor = reactor
@@ -54,23 +67,27 @@ class Command(object):
 
     def __del__(self):
         '''
+        Stop the command uppon destruction.
         '''
         self.stop()
 
     def __enter__(self):
         '''
+        Start the command uppon context enter.
         '''
         self.start()
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
         '''
+        Stop the command uppon context exit.
         '''
         self.stop()
         return False
 
     def start(self):
         '''
+        Start the command.
         '''
         if self.started():
             raise AlreadyStartedException()
@@ -79,7 +96,7 @@ class Command(object):
                '{1} "({2})< <(cat; kill 0)"').format(self.username,
                                                      self.host,
                                                      self.cmd)
-        self.ssh = pexpect.spawn(cmd)
+        self.ssh = pexpect.spawnu(cmd)
 
         self.reactor.register_command(self)
 
@@ -87,7 +104,7 @@ class Command(object):
 
     def terminate(self):
         '''
-        The process is killed but any pending monitor(s)
+        The command is killed but any pending monitor(s)
         can still be called (e.g. on_exit)
         '''
         if not self.started():
@@ -116,16 +133,33 @@ class Command(object):
 
     def started(self):
         '''
+        Check if the command is started.
+
+        Returns:
+            bool: True if started, False otherwise.
         '''
         return self.ssh is not None
 
     def fileno(self):
         '''
+        Return the command output pipe fileno.
+
+        Note:
+            This is used by the reactor.
+
+        Returns:
+            int: The pipe fileno.
         '''
         return self.ssh.fileno()
 
     def register_monitor(self, pattern, callback):
         '''
+        Register a `callback` to be executed once the `pattern` has matched
+        command output.
+
+        Args:
+            pattern (str): A pattern to match.
+            callback (function): A callback to invoke.
         '''
         self.monitors.setdefault(pattern, []).append(callback)
 
@@ -133,11 +167,16 @@ class Command(object):
 
     def register_exit_monitor(self, callback):
         '''
+        Register `callback` to be executed once the command has terminated.
+
+        Args:
+            callback (function): A callback to invoke.
         '''
         self.register_monitor(pexpect.EOF, callback)
 
     def process_output(self):
         '''
+        Try to match command output against registered monitor(s).
         '''
         patterns = [pexpect.TIMEOUT] + list(self.monitors.keys())
         index = self.ssh.expect(patterns, timeout = 0)
@@ -152,6 +191,10 @@ class Command(object):
 
     def __repr__(self):
         '''
+        Return the string represensation of the command.
+
+        Returns:
+            str: A string represensation of the command.
         '''
         return 'command "{0}"'.format(self.name)
 

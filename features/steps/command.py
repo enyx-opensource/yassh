@@ -1,6 +1,6 @@
 from behave import *
 from yassh import *
-from StringIO import StringIO
+from io import StringIO
 import sure
 
 @step(u'a command "{command}" is created as "{name}"')
