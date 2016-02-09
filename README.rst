@@ -10,6 +10,10 @@
    :target: https://codeclimate.com/github/Enyx-SA/yassh
    :alt: Code Climate
 
+.. image:: https://codeclimate.com/github/Enyx-SA/yassh/badges/issue_count.svg
+   :target: https://codeclimate.com/github/Enyx-SA/yassh
+   :alt: Issue Count
+
 yassh
 =====
 
