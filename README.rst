@@ -17,34 +17,41 @@ Usage
 
 .. code:: python
 
+    import logging
     from yassh import *
+
+    logging.basicConfig(level=logging.DEBUG)
 
     r = Reactor()
     c1 = Command('cmd1', r, 'localhost', 'user', 'sleep 5')
-    c2 = Command('cmd2', r, 'localhost', 'user', 'echo ok')
+    c2 = Command('cmd2', r, 'localhost', 'user', 'echo ok; sleep 15')
     c3 = Command('cmd3', r, 'localhost', 'user', 'echo "finished" && sleep 1')
 
     # Start cmd2 when cmd1 complete
-    def on_c1_exit(): c2.start()
-    c1.register_exit_monitor(on_c1_exit)
+    def start_c2(): c2.start()
+    c1.register_exit_monitor(start_c2)
 
     # Start cmd3 when cmd2 complete
-    def on_c2_ok(): c3.start()
-    c2.register_monitor('ok', on_c2_ok)
+    def start_c3(): c3.start()
+    c2.register_monitor(u'ok', start_c3)
 
     # Stop reactor when cmd3 complete
-    def on_c3_exit(): r.stop()
-    c3.register_exit_monitor(on_c3_exit)
+    def quit(): r.stop()
+    c2.register_exit_monitor(quit)
+
     # Print dummy message when c3 is near terminaison
     def on_c3_finished(): print 'c3 almost finished'
-    c3.register_monitor('finished', on_c3_finished)
+    c3.register_monitor(u'finished', on_c3_finished)
+
+    # Stop reactor when cmd3 complete
+    c3.register_exit_monitor(quit)
 
     # Start first task
     c1.start()
 
     timeout = -1
     while r.run(timeout) > 0:
-        pass
+            pass
 
 Installation
 ------------
