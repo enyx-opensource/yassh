@@ -83,7 +83,7 @@ class Command(object):
 
         self.reactor.register_command(self)
 
-        _logger.info('started command "%s"', self.name)
+        _logger.info('started %s', self)
 
     def terminate(self):
         '''
@@ -95,7 +95,7 @@ class Command(object):
 
         self.ssh.terminate()
 
-        _logger.info('terminated command "%s"', self.name)
+        _logger.info('terminated %s', self)
 
     def stop(self):
         '''
@@ -112,7 +112,7 @@ class Command(object):
 
         self.ssh = None
 
-        _logger.info('stopped command "%s" (%d)', self.name, self.result)
+        _logger.info('stopped %s (%d)', self, self.result)
 
     def started(self):
         '''
@@ -153,7 +153,7 @@ class Command(object):
     def __repr__(self):
         '''
         '''
-        return 'command {0}'.format(self.name)
+        return 'command "{0}"'.format(self.name)
 
     def _invoke_callbacks(self, matched_pattern):
         '''

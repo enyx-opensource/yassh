@@ -2,26 +2,34 @@ from behave import *
 from yassh import *
 import sure
 
-@step(u'a context "{name}" is created')
-def step_impl(context, name):
-    context.contexts[name] = Context(host='localhost', username='login')
+class ContextHolder(object):
+    '''
+    '''
+    def __init__(self, **kwargs):
+        '''
+        '''
+        self.context = Context(**kwargs)
+        self.context.__enter__()
 
-@step(u'the context "{name}" is entered')
-def step_impl(context, name):
-    context.contexts[name].__enter__()
+    def __del__(self):
+        '''
+        '''
+        self.context.__exit__(None, None, None)
 
-@step(u'the context "{name}" is exited')
-def step_impl(context, name):
-    context.contexts[name].__exit__(None, None, None)
 
-@step(u'a context "{ctx_name}" command "{command}" is run as "{name}"')
-def step_impl(context, ctx_name, command, name):
-    context.command[name] = context.contexts[ctx_name].run(command)
+@step(u'a context is created')
+def step_impl(context):
+    context.current_holder = ContextHolder(host = 'localhost',
+                                           username = 'login')
 
-@step(u'a context "{ctx_name}" command "{command}" is run it raises "{message}"')
-def step_impl(context, ctx_name, command, message):
+@step(u'a context command "{command}" is run as "{name}"')
+def step_impl(context, command, name):
+    context.command[name] = Context().run(command)
+
+@step(u'a context command "{command}" is run it raises "{message}"')
+def step_impl(context, command, message):
     try:
-        context.contexts[ctx_name].run(command)
+        Context().run(command)
         raise AssertionError('Expected an exception')
     except Exception as e:
         str(e).should.contain(message)

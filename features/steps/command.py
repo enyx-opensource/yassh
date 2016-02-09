@@ -1,19 +1,30 @@
 from behave import *
 from yassh import *
+from StringIO import StringIO
 import sure
 
 @step(u'a command "{command}" is created as "{name}"')
-def step_impl(context, command, name):
+def create_command(context, command, name, logfile = None):
     c = Command(name, context.reactor,
-                'localhost', 'login', command)
-
-    context.command[name] = c
+                'localhost', 'login', command,
+                logfile = logfile)
 
     def on_exit():
         context.command[name].stop()
         del context.command[name]
 
     c.register_exit_monitor(on_exit)
+
+    context.command[name] = c
+
+@step(u'a logged command "{command}" is created as "{name}"')
+def create_logged_commmand(context, command, name):
+    context.out_buffer = StringIO()
+    create_command(context, command, name, context.out_buffer)
+
+@step(u'the logged content is')
+def step_impl(context):
+    context.out_buffer.getvalue().strip().should_not.be.different_of(context.text)
 
 @step(u'the command "{name}" is started')
 def step_impl(context, name):
