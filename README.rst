@@ -6,6 +6,10 @@
    :target: https://coveralls.io/github/Enyx-SA/yassh?branch=master
    :alt: Coverage Status
 
+.. image:: https://codeclimate.com/github/Enyx-SA/yassh/badges/gpa.svg
+   :target: https://codeclimate.com/github/Enyx-SA/yassh
+   :alt: Code Climate
+
 yassh
 =====
 
