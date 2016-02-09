@@ -29,6 +29,7 @@ from .reactor import Reactor
 
 _logger = logging.getLogger(__name__)
 
+
 def run(host, username, cmd, logfile=None, ms_timeout=-1):
     '''
     Run ``cmd`` on ``host`` as ``username``.
@@ -51,4 +52,3 @@ def run(host, username, cmd, logfile=None, ms_timeout=-1):
             pass
 
     return c.result
-

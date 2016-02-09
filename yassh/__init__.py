@@ -23,14 +23,6 @@ SOFTWARE.
 '''
 
 import logging
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
-logging.getLogger(__name__).addHandler(NullHandler())
 
 from .reactor import *
 from .command import *
@@ -38,7 +30,8 @@ from .run import *
 from .context import *
 from .exceptions import *
 
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+
 __all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run', 'Context']
 
 __version__ = '0.1.0b3'
-

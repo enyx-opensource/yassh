@@ -29,6 +29,7 @@ from .exceptions import AlreadyStartedException
 
 _logger = logging.getLogger(__name__)
 
+
 class Command(object):
     '''
     This class is used to run a shell command.
@@ -75,7 +76,7 @@ class Command(object):
         self.register_exit_monitor(on_exit)
 
         _logger.debug('created command "%s" as "%s" on %s@%s',
-                     name, cmd, username, host)
+                      name, cmd, username, host)
 
     def __del__(self):
         '''
@@ -201,7 +202,7 @@ class Command(object):
         Try to match command output against registered monitor(s).
         '''
         patterns = [pexpect.TIMEOUT] + list(self.monitors.keys())
-        index = self.ssh.expect(patterns, timeout = 0)
+        index = self.ssh.expect(patterns, timeout=0)
 
         if index:
             # ssh.before seems only valid when something
@@ -226,4 +227,3 @@ class Command(object):
 
         for callback in self.monitors[matched_pattern]:
             callback()
-

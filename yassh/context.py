@@ -1,5 +1,6 @@
 from .run import run
 
+
 class Context(object):
     __variables = []
 
@@ -67,6 +68,5 @@ class Context(object):
         return run(self._get_required('host'),
                    self._get_required('username'),
                    cmd,
-                   logfile = logfile,
-                   ms_timeout = self._get_default('ms_timeout', -1))
-
+                   logfile=logfile,
+                   ms_timeout=self._get_default('ms_timeout', -1))

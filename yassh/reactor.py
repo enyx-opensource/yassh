@@ -28,6 +28,7 @@ import select
 
 _logger = logging.getLogger(__name__)
 
+
 class Reactor(object):
     '''
     This class is used to execute command(s) monitor(s).
