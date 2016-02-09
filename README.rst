@@ -1,7 +1,7 @@
 .. image:: https://travis-ci.org/Enyx-SA/yassh.svg?branch=master
    :target: https://travis-ci.org/Enyx-SA/yassh
    :alt: Build Status
-   
+
 .. image:: https://coveralls.io/repos/github/Enyx-SA/yassh/badge.svg?branch=master
    :target: https://coveralls.io/github/Enyx-SA/yassh?branch=master
    :alt: Coverage Status

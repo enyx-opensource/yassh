@@ -79,6 +79,8 @@ class Reactor(object):
         count = self.poller.poll(ms_timeout)
         for fd, _ in count:
             cmd = self.fd_to_cmd.get(fd, None)
+
+            _logger.debug('%s has new output', cmd)
             if cmd:
                 cmd.process_output()
 

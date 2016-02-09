@@ -40,5 +40,5 @@ from .exceptions import *
 
 __all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run', 'Context']
 
-__version__ = '0.1.0b2'
+__version__ = '0.1.0b3'
 

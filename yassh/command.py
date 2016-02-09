@@ -71,6 +71,9 @@ class Command(object):
 
         self.result = -1
 
+        def on_exit(): self.stop()
+        self.register_exit_monitor(on_exit)
+
         _logger.debug('created command "%s" as "%s" on %s@%s',
                      name, cmd, username, host)
 
@@ -180,7 +183,7 @@ class Command(object):
         '''
         self.monitors.setdefault(pattern, []).append(callback)
 
-        _logger.debug('registered monitor "%s" on %s', pattern, self.name)
+        _logger.debug('registered monitor "%s" on %s', pattern, self)
 
     def register_exit_monitor(self, callback):
         '''
@@ -218,8 +221,8 @@ class Command(object):
         return 'command "{0}"'.format(self.name)
 
     def _invoke_callbacks(self, matched_pattern):
-        _logger.debug('matched monitor "%s" on "%s"',
-                      matched_pattern, self.name)
+        _logger.debug('matched monitor "%s" on %s',
+                      matched_pattern, self)
 
         for callback in self.monitors[matched_pattern]:
             callback()
