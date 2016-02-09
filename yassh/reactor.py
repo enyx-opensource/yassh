@@ -30,10 +30,12 @@ _logger = logging.getLogger(__name__)
 
 class Reactor(object):
     '''
+    This class is used to execute command(s) monitor(s).
     '''
 
     def __init__(self):
         '''
+        Create a new reactor.
         '''
         self.poller = select.poll()
         self.fd_to_cmd = {}
@@ -41,11 +43,20 @@ class Reactor(object):
 
     def stop(self):
         '''
+        Stop the reactor.
+
+        Note
+        ----
+        Once stopped, the reactor can't be used again.
         '''
         self.stopped = True
 
     def register_command(self, cmd):
         '''
+        Register a new ``cmd`` on the reactor.
+
+        This will allow reactor to monitor ``cmd`` output
+        and execute ``cmd`` monitor accordingly.
         '''
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
         self.fd_to_cmd[cmd.fileno()] = cmd
@@ -54,6 +65,7 @@ class Reactor(object):
 
     def unregister_command(self, cmd):
         '''
+        Unregister a ``cmd``.
         '''
         del self.fd_to_cmd[cmd.fileno()]
         self.poller.unregister(cmd)
@@ -61,8 +73,6 @@ class Reactor(object):
         _logger.debug('unregistered %s', cmd)
 
     def _run(self, ms_timeout):
-        '''
-        '''
         if self.stopped:
             return 0
 
@@ -76,6 +86,13 @@ class Reactor(object):
 
     def run(self, ms_timeout):
         '''
+        Wait ``ms_timeout`` for some registered command(s) to generate
+        output and execute associated monitor(s).
+
+        Returns
+        -------
+        int
+            The count of command that generated output.
         '''
         try:
             return self._run(ms_timeout)

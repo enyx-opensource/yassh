@@ -33,21 +33,30 @@ class Command(object):
     '''
     This class is used to run a shell command.
 
-    Attributes:
-        result (int): The return code of the shell command.
+    Attributes
+    ----------
+    result : int
+        The return code of the shell command.
     '''
 
     def __init__(self, name, reactor, host, username, cmd, logfile=None):
         '''
         Create a new shell command without starting it.
 
-        Args:
-            name (str): The name of this command. Used by __repr__() method.
-            reactor (Reactor): The reactor used to execute monitors.
-            host (str): The host used to run the shell command.
-            username (str): The username used to to run the shell command.
-            cmd (str): A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
-            logfile (stream): A file object used to log shell command output.
+        Parameters
+        ----------
+        name : str
+            The name of this command. Used by __repr__() method.
+        reactor : ``Reactor``
+            The reactor used to execute monitors.
+        host : str
+            The host used to run the shell command.
+        username : str
+            The username used to to run the shell command.
+        cmd : str
+            A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
+        logfile : stream
+            A file object used to log shell command output.
         '''
         self.name = name
         self.reactor = reactor
@@ -135,8 +144,10 @@ class Command(object):
         '''
         Check if the command is started.
 
-        Returns:
-            bool: True if started, False otherwise.
+        Returns
+        -------
+        bool
+            True if started, False otherwise.
         '''
         return self.ssh is not None
 
@@ -144,22 +155,28 @@ class Command(object):
         '''
         Return the command output pipe fileno.
 
-        Note:
-            This is used by the reactor.
+        Note
+        ----
+        This is used by the reactor.
 
-        Returns:
-            int: The pipe fileno.
+        Returns
+        -------
+        int
+            The pipe fileno.
         '''
         return self.ssh.fileno()
 
     def register_monitor(self, pattern, callback):
         '''
-        Register a `callback` to be executed once the `pattern` has matched
+        Register a ``callback`` to be executed once the ``pattern`` has matched
         command output.
 
-        Args:
-            pattern (str): A pattern to match.
-            callback (function): A callback to invoke.
+        Parameters
+        ----------
+        pattern : str
+            A pattern to match.
+        callback : function
+            A callback to invoke.
         '''
         self.monitors.setdefault(pattern, []).append(callback)
 
@@ -167,10 +184,12 @@ class Command(object):
 
     def register_exit_monitor(self, callback):
         '''
-        Register `callback` to be executed once the command has terminated.
+        Register ``callback`` to be executed once the command has terminated.
 
-        Args:
-            callback (function): A callback to invoke.
+        Parameters
+        ----------
+        callback : function
+            A callback to invoke.
         '''
         self.register_monitor(pexpect.EOF, callback)
 
@@ -199,8 +218,6 @@ class Command(object):
         return 'command "{0}"'.format(self.name)
 
     def _invoke_callbacks(self, matched_pattern):
-        '''
-        '''
         _logger.debug('matched monitor "%s" on "%s"',
                       matched_pattern, self.name)
 

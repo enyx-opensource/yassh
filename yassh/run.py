@@ -29,8 +29,16 @@ from .reactor import Reactor
 
 _logger = logging.getLogger(__name__)
 
-def run(host, username, cmd, logfile=None, timeout=-1):
+def run(host, username, cmd, logfile=None, ms_timeout=-1):
     '''
+    Run ``cmd`` on ``host`` as ``username``.
+
+    Log command output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for command to complete.
+
+    Returns:
+    int
+        The command result code.
     '''
     r = Reactor()
     c = Command(cmd, r, host, username, cmd, logfile)
@@ -39,7 +47,7 @@ def run(host, username, cmd, logfile=None, timeout=-1):
     c.register_exit_monitor(on_exit)
 
     with c:
-        while r.run(timeout) > 0:
+        while r.run(ms_timeout) > 0:
             pass
 
     return c.result

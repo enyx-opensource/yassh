@@ -24,6 +24,7 @@ SOFTWARE.
 
 class AlreadyStartedException(Exception):
     '''
+    Raised when an already started command is started again.
     '''
     pass
 
