@@ -12,8 +12,6 @@ Feature: dependent run
         And the command "second_echo" is started when "first_echo" terminates
         And the command "second_echo" is monitored for "2" pattern
 
-        And the reactor is stopped after "second_echo" terminates
-
         When the reactor is run
 
         Then pattern "1" hasn't been matched
@@ -29,8 +27,6 @@ Feature: dependent run
         And the command "echo" is started
 
         And the command "sleep" is stopped when "echo" terminates
-
-        And the reactor is stopped after "sleep" terminates
 
         When the reactor is run
 

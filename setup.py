@@ -12,7 +12,7 @@ def _readme():
 
 def _version():
     with open(os.path.join(HERE, 'yassh', '__init__.py')) as f:
-        return re.search(r"__version__='([^']+)'", f.read()).group(1)
+        return re.search(r"__version__ = '([^']+)'", f.read()).group(1)
 
 setup(
     name='yassh',

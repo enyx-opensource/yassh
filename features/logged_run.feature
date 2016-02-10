@@ -8,8 +8,6 @@ Feature: logged run
         Given a logged command "echo ok" is created as "echo"
         And the command "echo" is started
 
-        And the reactor is stopped after "echo" terminates
-
         When the reactor is run
 
         Then the logged content is

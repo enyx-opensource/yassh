@@ -9,8 +9,6 @@ Feature: simple run
         And the command "echo" is monitored for "ok" pattern
         And the command "echo" is started
 
-        And the reactor is stopped after "echo" terminates
-
         When the reactor is run
 
         Then pattern "ok" has been matched "1" times
@@ -23,11 +21,6 @@ Feature: simple run
         And a command "echo 2" is created as "second"
         And the command "second" is monitored for "2" pattern
         And the command "second" is started
-
-        And the reactor is stopped after following commands terminate
-            | command |
-            | first   |
-            | second  |
 
         When the reactor is run
 

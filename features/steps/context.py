@@ -1,6 +1,7 @@
 from behave import *
+
 from yassh import *
-import sure
+
 
 class ContextHolder(object):
     '''

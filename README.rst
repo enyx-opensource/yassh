@@ -32,7 +32,7 @@ Usage
 
     r = Reactor()
     c1 = Command('cmd1', r, 'localhost', 'user', 'sleep 5')
-    c2 = Command('cmd2', r, 'localhost', 'user', 'echo ok; sleep 15')
+    c2 = Command('cmd2', r, 'localhost', 'user', 'echo ok')
     c3 = Command('cmd3', r, 'localhost', 'user', 'echo "finished" && sleep 1')
 
     # Start cmd2 when cmd1 complete
@@ -43,16 +43,9 @@ Usage
     def start_c3(): c3.start()
     c2.register_monitor(u'ok', start_c3)
 
-    # Stop reactor when cmd3 complete
-    def quit(): r.stop()
-    c2.register_exit_monitor(quit)
-
-    # Print dummy message when c3 is near terminaison
+     # Print dummy message when c3 is near terminaison
     def on_c3_finished(): print 'c3 almost finished'
     c3.register_monitor(u'finished', on_c3_finished)
-
-    # Stop reactor when cmd3 complete
-    c3.register_exit_monitor(quit)
 
     # Start first task
     c1.start()

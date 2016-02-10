@@ -72,7 +72,7 @@ class Command(object):
 
         self.result = -1
 
-        def on_exit(): self.stop()
+        def on_exit(): self._finalize()
         self.register_exit_monitor(on_exit)
 
         _logger.debug('created command "%s" as "%s" on %s@%s',
@@ -82,7 +82,7 @@ class Command(object):
         '''
         Stop the command uppon destruction.
         '''
-        self.stop()
+        self._finalize()
 
     def __enter__(self):
         '''
@@ -95,8 +95,22 @@ class Command(object):
         '''
         Stop the command uppon context exit.
         '''
-        self.stop()
+        self._finalize()
         return False
+
+    def _finalize(self):
+        if not self.started():
+            return
+
+        self.reactor.unregister_command(self)
+        self.ssh.close()
+
+        if self.ssh.exitstatus is not None:
+            self.result = self.ssh.exitstatus
+
+        self.ssh = None
+
+        _logger.info('finalized %s (%d)', self, self.result)
 
     def start(self):
         '''
@@ -115,7 +129,7 @@ class Command(object):
 
         _logger.info('started %s', self)
 
-    def terminate(self):
+    def stop(self):
         '''
         The command is killed but any pending monitor(s)
         can still be called (e.g. on_exit)
@@ -126,23 +140,6 @@ class Command(object):
         self.ssh.terminate()
 
         _logger.info('terminated %s', self)
-
-    def stop(self):
-        '''
-        The process is killed and any pending monitor is discarded.
-        '''
-        if not self.started():
-            return
-
-        self.reactor.unregister_command(self)
-        self.ssh.close()
-
-        if self.ssh.exitstatus is not None:
-            self.result = self.ssh.exitstatus
-
-        self.ssh = None
-
-        _logger.info('stopped %s (%d)', self, self.result)
 
     def started(self):
         '''

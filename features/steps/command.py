@@ -1,7 +1,8 @@
 from behave import *
-from yassh import *
 from io import StringIO
 import sure
+
+from yassh import *
 
 @step(u'a command "{command}" is created as "{name}"')
 def create_command(context, command, name, logfile = None):
@@ -9,9 +10,7 @@ def create_command(context, command, name, logfile = None):
                 'localhost', 'login', command,
                 logfile = logfile)
 
-    def on_exit():
-        context.command[name].stop()
-        del context.command[name]
+    def on_exit(): del context.command[name]
 
     c.register_exit_monitor(on_exit)
 
@@ -40,7 +39,7 @@ def step_impl(context, name, other):
 @step(u'the command "{name}" is stopped when "{other}" terminates')
 def step_impl(context, name, other):
     def on_exit():
-        context.command.get(name).terminate()
+        context.command.get(name).stop()
 
     context.command.get(other).register_exit_monitor(on_exit)
 
@@ -59,4 +58,12 @@ def step_impl(context, pattern, count):
 @step(u'pattern "{pattern}" hasn\'t been matched')
 def step_impl(context, pattern):
     context.monitors.get(pattern, None).should.be.none
+
+@step(u'the command "{name}" result code is "{result:d}"')
+def step_impl(context, name, result):
+    context.command.get(name).should.equal(result)
+
+@step(u'the command "{name}" result code is not "{result:d}"')
+def step_impl(context, name, result):
+    context.command.get(name).should_not.equal(result)
 

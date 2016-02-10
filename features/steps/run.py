@@ -1,5 +1,7 @@
 from behave import *
+
 from yassh import *
+
 
 @step(u'a command "{command}" is run as "{name}"')
 def step_impl(context, command, name):

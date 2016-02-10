@@ -40,17 +40,6 @@ class Reactor(object):
         '''
         self.poller = select.poll()
         self.fd_to_cmd = {}
-        self.stopped = False
-
-    def stop(self):
-        '''
-        Stop the reactor.
-
-        Note
-        ----
-        Once stopped, the reactor can't be used again.
-        '''
-        self.stopped = True
 
     def register_command(self, cmd):
         '''
@@ -74,11 +63,11 @@ class Reactor(object):
         _logger.debug('unregistered %s', cmd)
 
     def _run(self, ms_timeout):
-        if self.stopped:
+        if not len(self.fd_to_cmd):
             return 0
 
         count = self.poller.poll(ms_timeout)
-        for fd, _ in count:
+        for fd, __ in count:
             cmd = self.fd_to_cmd.get(fd, None)
 
             _logger.debug('%s has new output', cmd)
