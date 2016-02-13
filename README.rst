@@ -26,7 +26,7 @@ Usage
 .. code:: python
 
     import logging
-    from yassh import *
+    from yassh import Reactor, Command
 
     logging.basicConfig(level=logging.DEBUG)
 

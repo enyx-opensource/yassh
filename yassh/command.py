@@ -23,10 +23,11 @@ SOFTWARE.
 '''
 
 import logging
-import pexpect
+import uuid
 
 from .exceptions import AlreadyStartedException
 from .execution import Execution
+from .reactor import Reactor
 
 _logger = logging.getLogger(__name__)
 
@@ -78,3 +79,25 @@ class Command(Execution):
                                                  self.__host,
                                                  self.__cmd)
         self._start(cmd)
+
+
+def run(host, username, cmd, logfile=None, ms_timeout=-1):
+    '''
+    Run ``cmd`` on ``host`` as ``username``.
+
+    Log command output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for command to complete.
+
+    Returns:
+    int
+        The command result code.
+    '''
+    r = Reactor()
+    c = Command(uuid.uuid4(), r,
+                host, username, cmd, logfile)
+
+    with c:
+        while r.run(ms_timeout) > 0:
+            pass
+
+    return c.result
