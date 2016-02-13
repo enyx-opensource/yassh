@@ -31,6 +31,9 @@ from .exceptions import AlreadyStartedException
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__all__ = ['Command', 'run', 'Copy', 'copy', 'Reactor', 'AlreadyStartedException', 'run']
+__all__ = ['Command', 'run',
+           'Copy', 'copy',
+           'Reactor',
+           'AlreadyStartedException']
 
 __version__ = '0.4.0b1'

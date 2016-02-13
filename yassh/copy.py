@@ -85,6 +85,7 @@ class Copy(Execution):
                                          self.__remote_path)
         self._start(cmd)
 
+
 def copy(host, username, local_path, remote_path, logfile=None, ms_timeout=-1):
     '''
     Copy ``local_path`` to ``remote_path`` on ``host`` as ``username``.
