@@ -23,17 +23,18 @@ SOFTWARE.
 '''
 
 import logging
-import pexpect
+import uuid
 
-from .exceptions import AlreadyStartedException
 from .execution import Execution
+from .reactor import Reactor
 
 _logger = logging.getLogger(__name__)
 
 
-class Command(Execution):
+class Copy(Execution):
     '''
-    This class is used to run a shell command.
+    This class is used to copy a file from localhost
+    to a remote host.
 
     Attributes
     ----------
@@ -41,7 +42,8 @@ class Command(Execution):
         The return code of the shell command.
     '''
 
-    def __init__(self, name, reactor, host, username, cmd, logfile=None):
+    def __init__(self, name, reactor, host, username,
+                 local_path, remote_path, logfile=None):
         '''
         Create a new shell command without starting it.
 
@@ -55,26 +57,51 @@ class Command(Execution):
             The host used to run the shell command.
         username : str
             The username used to to run the shell command.
-        cmd : str
-            A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
+        local_path: str
+            The file or directory local path.
+        remote_path : str
+            The file or directory remote path.
         logfile : stream
             A file object used to log shell command output.
         '''
-        super(Command, self).__init__(name, reactor, logfile)
+        super(Copy, self).__init__(name, reactor, logfile)
 
         self.__host = host
         self.__username = username
-        self.__cmd = cmd
+        self.__local_path = local_path
+        self.__remote_path = remote_path
 
-        _logger.debug('created command "%s" as "%s" on %s@%s',
-                      name, cmd, username, host)
+        _logger.debug('created copy "%s" as "%s" -> "%s" on %s@%s',
+                      name, local_path, remote_path, username, host)
 
     def start(self):
         '''
         Start the command.
         '''
-        cmd = ('ssh -o BatchMode=yes "{0}"@{1} '
-               '"({2})< <(cat; kill 0)"').format(self.__username,
-                                                 self.__host,
-                                                 self.__cmd)
+        cmd = ('scp -r -o BatchMode=yes "{0}" '
+               '"{1}"@{2}:"{3}"').format(self.__local_path,
+                                         self.__username,
+                                         self.__host,
+                                         self.__remote_path)
         self._start(cmd)
+
+def copy(host, username, local_path, remote_path, logfile=None, ms_timeout=-1):
+    '''
+    Copy ``local_path`` to ``remote_path`` on ``host`` as ``username``.
+
+    Log command output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for command to complete.
+
+    Returns:
+    int
+        The command result code.
+    '''
+    r = Reactor()
+    c = Copy(uuid.uuid4(), r,
+             host, username, local_path, remote_path, logfile)
+
+    with c:
+        while r.run(ms_timeout) > 0:
+            pass
+
+    return c.result

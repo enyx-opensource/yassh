@@ -23,6 +23,7 @@ SOFTWARE.
 '''
 
 import logging
+import uuid
 
 from .command import Command
 from .reactor import Reactor
@@ -42,7 +43,8 @@ def run(host, username, cmd, logfile=None, ms_timeout=-1):
         The command result code.
     '''
     r = Reactor()
-    c = Command(cmd, r, host, username, cmd, logfile)
+    c = Command(uuid.uuid4(), r,
+                host, username, cmd, logfile)
 
     with c:
         while r.run(ms_timeout) > 0:

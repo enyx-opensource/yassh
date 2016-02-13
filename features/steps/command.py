@@ -10,11 +10,11 @@ def create_command(context, command, name, logfile = None):
                 'localhost', 'login', command,
                 logfile = logfile)
 
-    def on_exit(): del context.command[name]
+    def on_exit(): del context.commands[name]
 
     c.register_exit_monitor(on_exit)
 
-    context.command[name] = c
+    context.commands[name] = c
 
 @step(u'a logged command "{command}" is created as "{name}"')
 def create_logged_commmand(context, command, name):
@@ -27,21 +27,21 @@ def step_impl(context):
 
 @step(u'the command "{name}" is started')
 def step_impl(context, name):
-    context.command.get(name).start()
+    context.commands.get(name).start()
 
 @step(u'the command "{name}" is started when "{other}" terminates')
 def step_impl(context, name, other):
     def on_exit():
-        context.command.get(name).start()
+        context.commands.get(name).start()
 
-    context.command.get(other).register_exit_monitor(on_exit)
+    context.commands.get(other).register_exit_monitor(on_exit)
 
 @step(u'the command "{name}" is stopped when "{other}" terminates')
 def step_impl(context, name, other):
     def on_exit():
-        context.command.get(name).stop()
+        context.commands.get(name).stop()
 
-    context.command.get(other).register_exit_monitor(on_exit)
+    context.commands.get(other).register_exit_monitor(on_exit)
 
 @step(u'the command "{name}" is monitored for "{pattern}" pattern')
 def step_impl(context, name, pattern):
@@ -49,7 +49,7 @@ def step_impl(context, name, pattern):
         count = context.monitors.get(pattern, 0) + 1
         context.monitors[pattern] = count
 
-    context.command.get(name).register_monitor(pattern, on_match)
+    context.commands.get(name).register_monitor(pattern, on_match)
 
 @step(u'pattern "{pattern}" has been matched "{count:d}" times')
 def step_impl(context, pattern, count):
@@ -61,9 +61,9 @@ def step_impl(context, pattern):
 
 @step(u'the command "{name}" result code is "{result:d}"')
 def step_impl(context, name, result):
-    context.command.get(name).should.equal(result)
+    context.commands.get(name).should.equal(result)
 
 @step(u'the command "{name}" result code is not "{result:d}"')
 def step_impl(context, name, result):
-    context.command.get(name).should_not.equal(result)
+    context.commands.get(name).should_not.equal(result)
 

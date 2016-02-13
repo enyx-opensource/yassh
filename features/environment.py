@@ -1,4 +1,6 @@
 import os
+from tempfile import mkdtemp
+import shutil
 import logging
 
 def before_all(context):
@@ -12,9 +14,13 @@ def before_all(context):
 
 
 def before_scenario(context, scenario):
-    context.command = dict()
+    context.temp_directory = mkdtemp()
+    context.commands = dict()
     context.monitors = dict()
     context.contexts = dict()
+
+def after_scenario(context, scenario):
+    shutil.rmtree(context.temp_directory)
 
 def after_all(context):
     os.environ['PATH'] = context.old_path

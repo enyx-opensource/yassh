@@ -24,14 +24,14 @@ SOFTWARE.
 
 import logging
 
-from .reactor import *
-from .command import *
-from .run import *
-from .context import *
-from .exceptions import *
+from .reactor import Reactor
+from .command import Command
+from .copy import Copy, copy
+from .run import run
+from .exceptions import AlreadyStartedException
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__all__ = ['Command', 'Reactor', 'AlreadyStartedException', 'run', 'Context']
+__all__ = ['Command', 'Copy', 'copy', 'Reactor', 'AlreadyStartedException', 'run']
 
-__version__ = '0.2.0b1'
+__version__ = '0.3.0b1'
