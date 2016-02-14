@@ -21,7 +21,7 @@ setup(
 
     version=_version(),
 
-    description='A process remote launcher.',
+    description='A remote process launcher.',
     long_description=_readme(),
 
     url='https://github.com/Enyx-SA/yassh',

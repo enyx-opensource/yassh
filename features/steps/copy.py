@@ -1,29 +1,26 @@
-from behave import *
-from yassh import *
 from os import path
-import sure
+from behave import *
+import sys
 
-@step(u'a "{name}" file is created')
-def step_impl(context, name):
-    p = path.join(context.temp_directory, name)
-    open(p, 'w+')
+from yassh import *
 
 @step(u'a copy from "{source}" file to "{destination}" file is created as "{name}"')
 def step_impl(context, source, destination, name):
     c = Copy(name, context.reactor,
              'localhost', 'login',
              path.join(context.temp_directory, source),
-             path.join(context.temp_directory, destination))
-    context.commands[name] = c
+             path.join(context.temp_directory, destination),
+             sys.stdout)
 
-@step(u'a copy from "{source}" file to "{destination}" file is run')
-def step_impl(context, source, destination):
-    copy('localhost', 'login',
-         path.join(context.temp_directory, source),
-         path.join(context.temp_directory, destination))
+    def on_exit(): context.results[name] = c.result
+    c.register_exit_monitor(on_exit)
 
-@step(u'the "{name}" file exists')
-def step_impl(context, name):
-    p = path.join(context.temp_directory, name)
-    path.exists(p).should.be.ok
+    context.executions[name] = c
 
+
+@step(u'"{source}" is copied to "{destination}" as "{name}"')
+def step_impl(context, source, destination, name):
+    context.results[name] = copy('localhost', 'login',
+                                 path.join(context.temp_directory, source),
+                                 path.join(context.temp_directory, destination),
+                                 sys.stdout)

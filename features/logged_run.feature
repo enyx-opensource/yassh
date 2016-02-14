@@ -3,14 +3,17 @@ Feature: logged run
 
     Background: requirements are met
         Given a reactor is created
+        And an output buffer is created as "out"
 
     Scenario: enter context and execute one command
-        Given a logged command "echo ok" is created as "echo"
-        And the command "echo" is started
+        Given a run "echo ok" is created as "echo"
+            | option | value |
+            | output | out   |
+        And the execution "echo" is started
 
         When the reactor is run
 
-        Then the logged content is
+        Then the output buffer "out" content is
             """
             ok
             """

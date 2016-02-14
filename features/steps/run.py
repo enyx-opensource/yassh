@@ -1,17 +1,36 @@
 from behave import *
+import sys
 
 from yassh import *
 
 
-@step(u'a command "{command}" is run as "{name}"')
+def _table_to_options(table):
+    return dict([(a['option'], a['value']) for a in table or []])
+
+def _get_logfile(context):
+    options = _table_to_options(context.table)
+
+    output = options.get('output', None)
+    if output:
+        return context.out_buffers.get(output)
+
+    return sys.stdout
+
+
+@step(u'a run "{command}" is created as "{name}"')
 def step_impl(context, command, name):
-    context.commands[name] = run('localhost', 'login', command)
+    logfile = _get_logfile(context)
 
-@step(u'the command "{name}" result code is "{result:d}"')
-def step_impl(context, name, result):
-    context.commands.get(name).should.equal(result)
+    c = Command(name, context.reactor,
+                'localhost', 'login', command,
+                logfile=logfile)
 
-@step(u'the command "{name}" result code is not "{result:d}"')
-def step_impl(context, name, result):
-    context.commands.get(name).should_not.equal(result)
+    def on_exit(): context.results[name] = c.result
+    c.register_exit_monitor(on_exit)
 
+    context.executions[name] = c
+
+
+@step(u'"{execution}" is run as "{name}"')
+def step_impl(context, execution, name):
+    context.results[name] = run('localhost', 'login', execution, sys.stdout)
