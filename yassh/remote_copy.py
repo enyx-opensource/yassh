@@ -82,6 +82,12 @@ class RemoteCopy(Execution):
                                          self.__remote_path)
         self._start(cmd)
 
+    def stop(self):
+        '''
+        Stop the command.
+        '''
+        self._terminate()
+
 
 def remote_copy(host, username, local_path, remote_path,
                 logfile=None, ms_timeout=-1):

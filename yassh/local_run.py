@@ -67,6 +67,12 @@ class LocalRun(Execution):
         cmd = ('bash -c "({0})< <(cat; kill 0)"').format(self.__cmd)
         self._start(cmd)
 
+    def stop(self):
+        '''
+        Stop the command.
+        '''
+        self._send_eof()
+
 
 def local_run(cmd, logfile=None, ms_timeout=-1):
     '''

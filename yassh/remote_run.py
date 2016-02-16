@@ -77,6 +77,12 @@ class RemoteRun(Execution):
                                                  self.__cmd)
         self._start(cmd)
 
+    def stop(self):
+        '''
+        Stop the command.
+        '''
+        self._send_eof()
+
 
 def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
     '''

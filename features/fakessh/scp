@@ -2,6 +2,7 @@
 import sys
 import argparse
 import subprocess
+import signal
 import re
 
 def parse_args():
@@ -15,9 +16,13 @@ def parse_args():
 def main(args):
     destination = re.match('\w+@\w+:(.+)',
                            args.destination).group(1)
-    return subprocess.call('cp -r "{0}" "{1}"'.format(args.source,
-                                                      destination),
-                           shell=True)
+
+    if args.source == '/dev/zero' and destination == '/dev/null':
+        signal.pause()
+    else:
+        return subprocess.call('cp -r "{0}" "{1}"'.format(args.source,
+                                                          destination),
+                               shell=True)
 
 if __name__ == "__main__":
     sys.exit(main(parse_args()))

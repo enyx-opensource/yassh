@@ -18,18 +18,25 @@ Feature: dependent run
         And pattern "2" has been matched "1" times
 
     Scenario: first run is killed when second terminates
-        Given a remote run "sleep 100 && echo sleep_finished" is created as "sleep"
-        And the execution "sleep" is monitored for "sleep_finished" pattern
-        And the execution "sleep" is started
+        Given a remote run "sleep 100 && echo remote" is created as "sleep_remote"
+        And the execution "sleep_remote" is monitored for "sleep_finished" pattern
+        And the execution "sleep_remote" is started
+
+        Given a local run "sleep 100 && echo local" is created as "sleep_local"
+        And the execution "sleep_local" is monitored for "sleep_finished" pattern
+        And the execution "sleep_local" is started
+
 
         And a local run "echo ok" is created as "echo"
         And the execution "echo" is monitored for "ok" pattern
         And the execution "echo" is started
 
-        And the execution "sleep" is stopped when "echo" terminates
+        And the execution "sleep_remote" is stopped when "echo" terminates
+        And the execution "sleep_local" is stopped when "echo" terminates
 
         When the reactor is run
 
-        Then pattern "sleep_finished" hasn't been matched
+        Then pattern "remote" hasn't been matched
+        And pattern "local" hasn't been matched
         And pattern "ok" has been matched "1" times
 
