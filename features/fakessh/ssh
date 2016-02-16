@@ -5,14 +5,14 @@ import subprocess
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-l')
+    parser.add_argument('-t', action='store_true')
     parser.add_argument('-o')
     parser.add_argument('host')
     parser.add_argument('cmd')
     return parser.parse_args()
 
 def main(args):
-    return subprocess.call('bash -c "{0}"'.format(args.cmd), shell=True)
+    return subprocess.call(args.cmd, shell=True)
 
 if __name__ == "__main__":
     sys.exit(main(parse_args()))

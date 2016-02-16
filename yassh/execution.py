@@ -116,17 +116,6 @@ class Execution(object):
 
         _logger.debug('started %s', self)
 
-    def _send_eof(self):
-        '''
-        The command receives an eof.
-        '''
-        if not self.started():
-            return
-
-        self.__exec.sendeof()
-
-        _logger.debug('sent eof to %s', self)
-
     def _terminate(self):
         '''
         The command is killed but any pending monitor(s)

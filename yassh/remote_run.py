@@ -71,17 +71,17 @@ class RemoteRun(Execution):
         '''
         Start the command.
         '''
-        cmd = ('ssh -o BatchMode=yes "{0}"@{1} '
-               '"({2})< <(cat; kill 0)"').format(self.__username,
-                                                 self.__host,
-                                                 self.__cmd)
+        cmd = ('ssh -t -o BatchMode=yes "{0}"@{1} '
+               '"{2}"').format(self.__username,
+                               self.__host,
+                               self.__cmd)
         self._start(cmd)
 
     def stop(self):
         '''
         Stop the command.
         '''
-        self._send_eof()
+        self._terminate()
 
 
 def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
