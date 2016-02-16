@@ -24,6 +24,7 @@ SOFTWARE.
 
 import logging
 import pexpect
+import signal
 import uuid
 
 from .exceptions import AlreadyStartedException
@@ -124,7 +125,7 @@ class Execution(object):
         if not self.started():
             return
 
-        self.__exec.terminate()
+        self.__exec.kill(signal.SIGTERM)
 
         _logger.debug('terminated %s', self)
 
