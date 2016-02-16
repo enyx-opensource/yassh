@@ -26,14 +26,14 @@ Usage
 .. code:: python
 
     import logging
-    from yassh import Reactor, Command
+    from yassh import Reactor, RemoteRun, LocalRun
 
     logging.basicConfig(level=logging.DEBUG)
 
     r = Reactor()
-    c1 = Command('cmd1', r, 'localhost', 'user', 'sleep 5')
-    c2 = Command('cmd2', r, 'localhost', 'user', 'echo ok')
-    c3 = Command('cmd3', r, 'localhost', 'user', 'echo "finished" && sleep 1')
+    c1 = RemoteRun('cmd1', r, 'localhost', 'user', 'sleep 5')
+    c2 = LocalRun('cmd2', r, 'echo ok')
+    c3 = RemoteRun('cmd3', r, 'localhost', 'user', 'echo "finished" && sleep 1')
 
     # Start cmd2 when cmd1 complete
     def start_c2(): c2.start()

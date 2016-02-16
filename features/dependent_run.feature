@@ -5,10 +5,10 @@ Feature: dependent run
         Given a reactor is created
 
     Scenario: second run is executed when first terminates
-        Given a run "echo 1" is created as "first_echo"
+        Given a remote run "echo 1" is created as "first_echo"
         And the execution "first_echo" is started
 
-        And a run "echo 2" is created as "second_echo"
+        And a local run "echo 2" is created as "second_echo"
         And the execution "second_echo" is started when "first_echo" terminates
         And the execution "second_echo" is monitored for "2" pattern
 
@@ -18,11 +18,11 @@ Feature: dependent run
         And pattern "2" has been matched "1" times
 
     Scenario: first run is killed when second terminates
-        Given a run "sleep 100 && echo sleep_finished" is created as "sleep"
+        Given a remote run "sleep 100 && echo sleep_finished" is created as "sleep"
         And the execution "sleep" is monitored for "sleep_finished" pattern
         And the execution "sleep" is started
 
-        And a run "echo ok" is created as "echo"
+        And a local run "echo ok" is created as "echo"
         And the execution "echo" is monitored for "ok" pattern
         And the execution "echo" is started
 

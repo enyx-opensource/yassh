@@ -1,7 +1,7 @@
 from behave import *
 import sys
 
-from yassh import *
+from yassh import LocalRun, local_run
 
 
 def _table_to_options(table):
@@ -17,13 +17,11 @@ def _get_logfile(context):
     return sys.stdout
 
 
-@step(u'a run "{command}" is created as "{name}"')
+@step(u'a local run "{command}" is created as "{name}"')
 def step_impl(context, command, name):
     logfile = _get_logfile(context)
 
-    c = Command(name, context.reactor,
-                'localhost', 'login', command,
-                logfile=logfile)
+    c = LocalRun(context.reactor, command, logfile=logfile)
 
     def on_exit(): context.results[name] = c.result
     c.register_exit_monitor(on_exit)
@@ -31,6 +29,6 @@ def step_impl(context, command, name):
     context.executions[name] = c
 
 
-@step(u'"{execution}" is run as "{name}"')
+@step(u'"{execution}" is locally run as "{name}"')
 def step_impl(context, execution, name):
-    context.results[name] = run('localhost', 'login', execution, sys.stdout)
+    context.results[name] = local_run(execution, sys.stdout)

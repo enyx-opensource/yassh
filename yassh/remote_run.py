@@ -23,7 +23,6 @@ SOFTWARE.
 '''
 
 import logging
-import uuid
 
 from .exceptions import AlreadyStartedException
 from .execution import Execution
@@ -32,7 +31,7 @@ from .reactor import Reactor
 _logger = logging.getLogger(__name__)
 
 
-class Command(Execution):
+class RemoteRun(Execution):
     '''
     This class is used to run a shell command.
 
@@ -42,14 +41,12 @@ class Command(Execution):
         The return code of the shell command.
     '''
 
-    def __init__(self, name, reactor, host, username, cmd, logfile=None):
+    def __init__(self, reactor, host, username, cmd, logfile=None):
         '''
         Create a new shell command without starting it.
 
         Parameters
         ----------
-        name : str
-            The name of this command. Used by __repr__() method.
         reactor : ``Reactor``
             The reactor used to execute monitors.
         host : str
@@ -61,14 +58,14 @@ class Command(Execution):
         logfile : stream
             A file object used to log shell command output.
         '''
-        super(Command, self).__init__(name, reactor, logfile)
+        super(RemoteRun, self).__init__(reactor, logfile)
 
         self.__host = host
         self.__username = username
         self.__cmd = cmd
 
-        _logger.debug('created command "%s" as "%s" on %s@%s',
-                      name, cmd, username, host)
+        _logger.debug('created remote run "%s" as on %s@%s',
+                      cmd, username, host)
 
     def start(self):
         '''
@@ -81,7 +78,7 @@ class Command(Execution):
         self._start(cmd)
 
 
-def run(host, username, cmd, logfile=None, ms_timeout=-1):
+def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
     '''
     Run ``cmd`` on ``host`` as ``username``.
 
@@ -93,8 +90,7 @@ def run(host, username, cmd, logfile=None, ms_timeout=-1):
         The command result code.
     '''
     r = Reactor()
-    c = Command(uuid.uuid4(), r,
-                host, username, cmd, logfile)
+    c = RemoteRun(r, host, username, cmd, logfile)
 
     with c:
         while r.run(ms_timeout) > 0:

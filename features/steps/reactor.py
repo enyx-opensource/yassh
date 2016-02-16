@@ -1,6 +1,6 @@
 from behave import *
 
-from yassh import *
+from yassh import Reactor
 
 
 @step(u'a reactor is created')

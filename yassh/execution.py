@@ -24,6 +24,7 @@ SOFTWARE.
 
 import logging
 import pexpect
+import uuid
 
 from .exceptions import AlreadyStartedException
 
@@ -40,14 +41,12 @@ class Execution(object):
         The return code of the shell command.
     '''
 
-    def __init__(self, name, reactor, logfile):
+    def __init__(self, reactor, logfile):
         '''
         Create a new shell command without starting it.
 
         Parameters
         ----------
-        name : str
-            The name of this command. Used by __repr__() method.
         reactor : ``Reactor``
             The reactor used to execute monitors.
         cmd : str
@@ -55,7 +54,7 @@ class Execution(object):
         logfile : stream
             A file object used to log shell command output.
         '''
-        self.__name = name
+        self.__name = uuid.uuid4()
         self.__reactor = reactor
         self.__exec = None
 
@@ -68,7 +67,7 @@ class Execution(object):
         def on_exit(): self.__finalize()
         self.register_exit_monitor(on_exit)
 
-        _logger.debug('created execution "%s"', name)
+        _logger.debug('created execution "%s"', self.__name)
 
     def __del__(self):
         '''

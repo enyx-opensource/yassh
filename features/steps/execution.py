@@ -1,8 +1,6 @@
 from behave import *
 import sure
 
-from yassh import *
-
 
 @step(u'the execution "{name}" is started')
 def step_impl(context, name):
