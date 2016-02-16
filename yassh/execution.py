@@ -101,7 +101,7 @@ class Execution(object):
 
         self.__exec = None
 
-        _logger.info('finalized %s (%d)', self, self.result)
+        _logger.debug('finalized %s (%d)', self, self.result)
 
     def _start(self, cmd):
         '''
@@ -114,7 +114,7 @@ class Execution(object):
 
         self.__reactor.register_command(self)
 
-        _logger.info('started %s', self)
+        _logger.debug('started %s', self)
 
     def stop(self):
         '''
@@ -126,7 +126,7 @@ class Execution(object):
 
         self.__exec.terminate()
 
-        _logger.info('terminated %s', self)
+        _logger.debug('terminated %s', self)
 
     def started(self):
         '''
