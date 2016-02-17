@@ -104,14 +104,14 @@ class Execution(object):
 
         _logger.debug('finalized %s (%d)', self, self.result)
 
-    def _start(self, cmd):
+    def _start(self, cmd, args=[]):
         '''
         Start the command.
         '''
         if self.started():
             raise AlreadyStartedException()
 
-        self.__exec = pexpect.spawnu(cmd)
+        self.__exec = pexpect.spawnu(cmd, args)
 
         self.__reactor.register_command(self)
 
@@ -126,6 +126,18 @@ class Execution(object):
             return
 
         self.__exec.kill(signal.SIGTERM)
+
+        _logger.debug('terminated %s', self)
+
+    def _send_eof(self):
+        '''
+        The command is killed but any pending monitor(s)
+        can still be called (e.g. on_exit)
+        '''
+        if not self.started():
+            return
+
+        self.__exec.sendeof()
 
         _logger.debug('terminated %s', self)
 
