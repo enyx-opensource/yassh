@@ -111,6 +111,7 @@ class Execution(object):
         if self.started():
             raise AlreadyStartedException()
 
+        self.result = -1
         self.__exec = pexpect.spawnu(cmd, args)
 
         self.__reactor.register_command(self)
