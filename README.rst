@@ -31,9 +31,9 @@ Usage
     logging.basicConfig(level=logging.DEBUG)
 
     r = Reactor()
-    c1 = RemoteRun('cmd1', r, 'localhost', 'user', 'sleep 5')
-    c2 = LocalRun('cmd2', r, 'echo ok')
-    c3 = RemoteRun('cmd3', r, 'localhost', 'user', 'echo "finished" && sleep 1')
+    c1 = RemoteRun(r, 'localhost', 'user', 'sleep 5')
+    c2 = LocalRun(r, 'echo ok')
+    c3 = RemoteRun(r, 'localhost', 'user', 'echo "finished" && sleep 1')
 
     # Start cmd2 when cmd1 complete
     def start_c2(): c2.start()
