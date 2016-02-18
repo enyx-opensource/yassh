@@ -38,28 +38,28 @@ class RemoteCopy(Execution):
     Attributes
     ----------
     result : int
-        The return code of the shell command.
+        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, host, username,
                  local_path, remote_path, logfile=None):
         '''
-        Create a new shell command without starting it.
+        Create a new shell execution without starting it.
 
         Parameters
         ----------
         reactor : ``Reactor``
             The reactor used to execute monitors.
         host : str
-            The host used to run the shell command.
+            The host used to run the shell execution.
         username : str
-            The username used to to run the shell command.
+            The username used to to run the shell execution.
         local_path: str
             The file or directory local path.
         remote_path : str
             The file or directory remote path.
         logfile : stream
-            A file object used to log shell command output.
+            A file object used to log shell execution output.
         '''
         super(RemoteCopy, self).__init__(reactor, logfile)
 
@@ -73,7 +73,7 @@ class RemoteCopy(Execution):
 
     def start(self):
         '''
-        Start the command.
+        Start the execution.
         '''
         cmd = ('scp -r -o BatchMode=yes "{0}" '
                '"{1}"@{2}:"{3}"').format(self.__local_path,
@@ -84,7 +84,7 @@ class RemoteCopy(Execution):
 
     def stop(self):
         '''
-        Stop the command.
+        Stop the execution.
         '''
         self._terminate()
 
@@ -94,12 +94,12 @@ def remote_copy(host, username, local_path, remote_path,
     '''
     Copy ``local_path`` to ``remote_path`` on ``host`` as ``username``.
 
-    Log command output into ``logfile`` if not None.
-    Wait ``ms_timeout`` for command to complete.
+    Log execution output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for execution to complete.
 
     Returns:
     int
-        The command result code.
+        The execution result code.
     '''
     r = Reactor()
     c = RemoteCopy(r, host, username, local_path, remote_path, logfile)

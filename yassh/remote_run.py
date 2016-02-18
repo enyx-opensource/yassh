@@ -33,30 +33,30 @@ _logger = logging.getLogger(__name__)
 
 class RemoteRun(Execution):
     '''
-    This class is used to run a shell command.
+    This class is used to run a shell execution.
 
     Attributes
     ----------
     result : int
-        The return code of the shell command.
+        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, host, username, cmd, logfile=None):
         '''
-        Create a new shell command without starting it.
+        Create a new shell execution without starting it.
 
         Parameters
         ----------
         reactor : ``Reactor``
             The reactor used to execute monitors.
         host : str
-            The host used to run the shell command.
+            The host used to run the shell execution.
         username : str
-            The username used to to run the shell command.
+            The username used to to run the shell execution.
         cmd : str
             A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
         logfile : stream
-            A file object used to log shell command output.
+            A file object used to log shell execution output.
         '''
         super(RemoteRun, self).__init__(reactor, logfile)
 
@@ -69,7 +69,7 @@ class RemoteRun(Execution):
 
     def start(self):
         '''
-        Start the command.
+        Start the execution.
         '''
         args = ['-o BatchMode=yes',
                 '{0}@{1}'.format(self.__username, self.__host),
@@ -78,7 +78,7 @@ class RemoteRun(Execution):
 
     def stop(self):
         '''
-        Stop the command.
+        Stop the execution.
         '''
         self._send_eof()
 
@@ -87,12 +87,12 @@ def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
     '''
     Run ``cmd`` on ``host`` as ``username``.
 
-    Log command output into ``logfile`` if not None.
-    Wait ``ms_timeout`` for command to complete.
+    Log execution output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for execution to complete.
 
     Returns:
     int
-        The command result code.
+        The execution result code.
     '''
     r = Reactor()
     c = RemoteRun(r, host, username, cmd, logfile)

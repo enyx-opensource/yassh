@@ -33,17 +33,17 @@ _logger = logging.getLogger(__name__)
 
 class LocalRun(Execution):
     '''
-    This class is used to run locally a shell command.
+    This class is used to run locally a shell execution.
 
     Attributes
     ----------
     result : int
-        The return code of the shell command.
+        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, cmd, logfile=None):
         '''
-        Create a new shell command without starting it.
+        Create a new shell execution without starting it.
 
         Parameters
         ----------
@@ -52,7 +52,7 @@ class LocalRun(Execution):
         cmd : str
             A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
         logfile : stream
-            A file object used to log shell command output.
+            A file object used to log shell execution output.
         '''
         super(LocalRun, self).__init__(reactor, logfile)
 
@@ -62,13 +62,13 @@ class LocalRun(Execution):
 
     def start(self):
         '''
-        Start the command.
+        Start the execution.
         '''
         self._start(self.__cmd)
 
     def stop(self):
         '''
-        Stop the command.
+        Stop the execution.
         '''
         self._terminate()
 
@@ -77,12 +77,12 @@ def local_run(cmd, logfile=None, ms_timeout=-1):
     '''
     Run ``cmd``.
 
-    Log command output into ``logfile`` if not None.
-    Wait ``ms_timeout`` for command to complete.
+    Log execution output into ``logfile`` if not None.
+    Wait ``ms_timeout`` for execution to complete.
 
     Returns:
     int
-        The command result code.
+        The execution result code.
     '''
     r = Reactor()
     c = LocalRun(r, cmd, logfile)

@@ -31,7 +31,7 @@ _logger = logging.getLogger(__name__)
 
 class Reactor(object):
     '''
-    This class is used to execute command(s) monitor(s).
+    This class is used to execute execution(s) monitor(s).
     '''
 
     def __init__(self):
@@ -41,7 +41,7 @@ class Reactor(object):
         self.poller = select.poll()
         self.fd_to_cmd = {}
 
-    def register_command(self, cmd):
+    def register_execution(self, cmd):
         '''
         Register a new ``cmd`` on the reactor.
 
@@ -53,7 +53,7 @@ class Reactor(object):
 
         _logger.debug('registered %s', cmd)
 
-    def unregister_command(self, cmd):
+    def unregister_execution(self, cmd):
         '''
         Unregister a ``cmd``.
         '''
@@ -78,13 +78,13 @@ class Reactor(object):
 
     def run(self, ms_timeout):
         '''
-        Wait ``ms_timeout`` for some registered command(s) to generate
+        Wait ``ms_timeout`` for some registered execution(s) to generate
         output and execute associated monitor(s).
 
         Returns
         -------
         int
-            The count of command that generated output.
+            The count of execution that generated output.
         '''
         try:
             return self._run(ms_timeout)

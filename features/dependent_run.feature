@@ -15,7 +15,10 @@ Feature: dependent run
         When the reactor is run
 
         Then pattern "1" hasn't been matched
+        And the "first_echo" result code is "0"
+
         And pattern "2" has been matched "1" times
+        And the "second_echo" result code is "0"
 
     Scenario: first run is killed when second terminates
         Given a remote run "sleep 100 && echo remote" is created as "sleep_remote"
@@ -37,6 +40,11 @@ Feature: dependent run
         When the reactor is run
 
         Then pattern "remote" hasn't been matched
+        And the "sleep_remote" result code is not "0"
+
         And pattern "local" hasn't been matched
+        And the "sleep_local" result code is not "0"
+
         And pattern "ok" has been matched "1" times
+        And the "echo" result code is "0"
 

@@ -34,17 +34,17 @@ _logger = logging.getLogger(__name__)
 
 class Execution(object):
     '''
-    This class is used to run a shell command.
+    This class is used to run a shell execution.
 
     Attributes
     ----------
     result : int
-        The return code of the shell command.
+        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, logfile):
         '''
-        Create a new shell command without starting it.
+        Create a new shell execution without starting it.
 
         Parameters
         ----------
@@ -53,7 +53,7 @@ class Execution(object):
         cmd : str
             A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
         logfile : stream
-            A file object used to log shell command output.
+            A file object used to log shell execution output.
         '''
         self.__name = uuid.uuid4()
         self.__reactor = reactor
@@ -72,20 +72,20 @@ class Execution(object):
 
     def __del__(self):
         '''
-        Stop the command uppon destruction.
+        Stop the execution uppon destruction.
         '''
         self.__finalize()
 
     def __enter__(self):
         '''
-        Start the command uppon context enter.
+        Start the execution uppon context enter.
         '''
         self.start()
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
         '''
-        Stop the command uppon context exit.
+        Stop the execution uppon context exit.
         '''
         self.__finalize()
         return False
@@ -94,7 +94,7 @@ class Execution(object):
         if not self.started():
             return
 
-        self.__reactor.unregister_command(self)
+        self.__reactor.unregister_execution(self)
         self.__exec.close()
 
         if self.__exec.exitstatus is not None:
@@ -106,7 +106,7 @@ class Execution(object):
 
     def _start(self, cmd, args=[]):
         '''
-        Start the command.
+        Start the execution.
         '''
         if self.started():
             raise AlreadyStartedException()
@@ -114,13 +114,13 @@ class Execution(object):
         self.result = -1
         self.__exec = pexpect.spawnu(cmd, args)
 
-        self.__reactor.register_command(self)
+        self.__reactor.register_execution(self)
 
         _logger.debug('started %s', self)
 
     def _terminate(self):
         '''
-        The command is killed but any pending monitor(s)
+        The execution is killed but any pending monitor(s)
         can still be called (e.g. on_exit)
         '''
         if not self.started():
@@ -132,7 +132,7 @@ class Execution(object):
 
     def _send_eof(self):
         '''
-        The command is killed but any pending monitor(s)
+        The execution is killed but any pending monitor(s)
         can still be called (e.g. on_exit)
         '''
         if not self.started():
@@ -144,7 +144,7 @@ class Execution(object):
 
     def started(self):
         '''
-        Check if the command is started.
+        Check if the execution is started.
 
         Returns
         -------
@@ -155,7 +155,7 @@ class Execution(object):
 
     def fileno(self):
         '''
-        Return the command output pipe fileno.
+        Return the execution output pipe fileno.
 
         Note
         ----
@@ -171,7 +171,7 @@ class Execution(object):
     def register_monitor(self, pattern, callback):
         '''
         Register a ``callback`` to be executed once the ``pattern`` has matched
-        command output.
+        execution output.
 
         Parameters
         ----------
@@ -186,7 +186,7 @@ class Execution(object):
 
     def register_exit_monitor(self, callback):
         '''
-        Register ``callback`` to be executed once the command has terminated.
+        Register ``callback`` to be executed once the execution has terminated.
 
         Parameters
         ----------
@@ -197,7 +197,7 @@ class Execution(object):
 
     def process_output(self):
         '''
-        Try to match command output against registered monitor(s).
+        Try to match execution output against registered monitor(s).
         '''
         patterns = [pexpect.TIMEOUT] + list(self.__monitors.keys())
         index = self.__exec.expect(patterns, timeout=0)
@@ -212,12 +212,12 @@ class Execution(object):
 
     def __repr__(self):
         '''
-        Return the string represensation of the command.
+        Return the string represensation of the execution.
 
         Returns:
-            str: A string represensation of the command.
+            str: A string represensation of the execution.
         '''
-        return 'command "{0}"'.format(self.__name)
+        return 'execution "{0}"'.format(self.__name)
 
     def __invoke_callbacks(self, matched_pattern):
         _logger.debug('matched monitor "%s" on %s',

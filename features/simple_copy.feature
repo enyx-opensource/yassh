@@ -25,4 +25,4 @@ Feature: simple copy
 
         When the reactor is run
 
-        And the "copy" result code is not "0"
+        Then the "copy" result code is not "0"
