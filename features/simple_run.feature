@@ -4,6 +4,13 @@ Feature: simple run
     Background: requirements are met
         Given a reactor is created
 
+    Scenario: create two command and check representation.
+        Given a remote run "echo ok" is created as "echo1"
+
+        And a remote run "echo ok" is created as "echo2"
+
+        Then the executions strings are different
+
     Scenario: execute one command
         Given a remote run "echo ok" is created as "echo"
         And the execution "echo" is monitored for "ok" pattern
@@ -27,3 +34,18 @@ Feature: simple run
         Then pattern "1" has been matched "1" times
         And pattern "2" has been matched "1" times
 
+    Scenario: try to start the same command two times
+        Given a remote run "echo 1" is created as "first"
+
+        When the execution "first" is started
+
+        Then starting the execution "first" again should raise
+
+    Scenario: try to stop a non-started command
+        Given a remote run "echo remote" is created as "echo_remote"
+        Given a local run "echo local" is created as "echo_local"
+
+        When no execution is started
+
+        Then stopping the execution "echo_remote" should not raise
+        And stopping the execution "echo_remote" should not raise

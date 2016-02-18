@@ -58,7 +58,7 @@ class LocalRun(Execution):
 
         self.__cmd = cmd.replace('"', r'\"')
 
-        _logger.debug('created local local run "%s"', cmd)
+        _logger.debug(u'created local local run "%s"', cmd)
 
     def start(self):
         '''

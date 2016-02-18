@@ -55,7 +55,7 @@ class Execution(object):
         logfile : stream
             A file object used to log shell execution output.
         '''
-        self.__name = uuid.uuid4()
+        self.__id = uuid.uuid4()
         self.__reactor = reactor
         self.__exec = None
 
@@ -68,7 +68,7 @@ class Execution(object):
         def on_exit(): self.__finalize()
         self.register_exit_monitor(on_exit)
 
-        _logger.debug('created execution "%s"', self.__name)
+        _logger.debug(u'created "%s"', self)
 
     def __del__(self):
         '''
@@ -102,7 +102,7 @@ class Execution(object):
 
         self.__exec = None
 
-        _logger.debug('finalized %s (%d)', self, self.result)
+        _logger.debug(u'finalized %s (%d)', self, self.result)
 
     def _start(self, cmd, args=[]):
         '''
@@ -116,7 +116,7 @@ class Execution(object):
 
         self.__reactor.register_execution(self)
 
-        _logger.debug('started %s', self)
+        _logger.debug(u'started %s', self)
 
     def _terminate(self):
         '''
@@ -128,7 +128,7 @@ class Execution(object):
 
         self.__exec.kill(signal.SIGTERM)
 
-        _logger.debug('terminated %s', self)
+        _logger.debug(u'terminated %s', self)
 
     def _send_eof(self):
         '''
@@ -140,7 +140,7 @@ class Execution(object):
 
         self.__exec.sendeof()
 
-        _logger.debug('terminated %s', self)
+        _logger.debug(u'terminated %s', self)
 
     def started(self):
         '''
@@ -182,7 +182,7 @@ class Execution(object):
         '''
         self.__monitors.setdefault(pattern, []).append(callback)
 
-        _logger.debug('registered monitor "%s" on %s', pattern, self)
+        _logger.debug(u'registered monitor "%s" on %s', pattern, self)
 
     def register_exit_monitor(self, callback):
         '''
@@ -210,17 +210,26 @@ class Execution(object):
 
             self.__invoke_callbacks(patterns[index])
 
-    def __repr__(self):
+    def __unicode__(self):
         '''
         Return the string represensation of the execution.
 
         Returns:
             str: A string represensation of the execution.
         '''
-        return 'execution "{0}"'.format(self.__name)
+        return u'execution "{0}"'.format(repr(self))
+
+    def __repr__(self):
+        '''
+        Return the id of the execution.
+
+        Returns:
+            str: An id.
+        '''
+        return str(self.__id)
 
     def __invoke_callbacks(self, matched_pattern):
-        _logger.debug('matched monitor "%s" on %s',
+        _logger.debug(u'matched monitor "%s" on %s',
                       matched_pattern, self)
 
         for callback in self.__monitors[matched_pattern]:

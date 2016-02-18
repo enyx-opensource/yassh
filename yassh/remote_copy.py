@@ -68,7 +68,7 @@ class RemoteCopy(Execution):
         self.__local_path = local_path.replace('"', r'\"')
         self.__remote_path = remote_path.replace('"', r'\"')
 
-        _logger.debug('created copy "%s" -> "%s" on %s@%s',
+        _logger.debug(u'created copy "%s" -> "%s" on %s@%s',
                       local_path, remote_path, username, host)
 
     def start(self):

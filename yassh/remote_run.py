@@ -64,7 +64,7 @@ class RemoteRun(Execution):
         self.__username = username
         self.__cmd = cmd.replace('"', r'\"')
 
-        _logger.debug('created remote run "%s" as on %s@%s',
+        _logger.debug(u'created remote run "%s" as on %s@%s',
                       cmd, username, host)
 
     def start(self):
