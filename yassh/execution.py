@@ -210,14 +210,14 @@ class Execution(object):
 
             self.__invoke_callbacks(patterns[index])
 
-    def __unicode__(self):
+    def __str__(self):
         '''
         Return the string represensation of the execution.
 
         Returns:
             str: A string represensation of the execution.
         '''
-        return u'execution "{0}"'.format(repr(self))
+        return 'execution "{0}"'.format(repr(self))
 
     def __repr__(self):
         '''

@@ -44,7 +44,7 @@ def step_impl(context):
     executions_strings = set()
 
     for execution in context.executions.values():
-        execution_string = unicode(execution)
+        execution_string = str(execution)
         executions_strings.should_not.contain(execution_string)
         executions_strings.add(execution_string)
 
