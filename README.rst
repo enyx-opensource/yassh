@@ -1,17 +1,17 @@
-.. image:: https://travis-ci.org/Enyx-SA/yassh.svg?branch=master
-   :target: https://travis-ci.org/Enyx-SA/yassh
+.. image:: https://travis-ci.org/enyx-opensource/yassh.svg?branch=master
+   :target: https://travis-ci.org/enyx-opensource/yassh
    :alt: Build Status
 
-.. image:: https://coveralls.io/repos/github/Enyx-SA/yassh/badge.svg?branch=master
-   :target: https://coveralls.io/github/Enyx-SA/yassh?branch=master
+.. image:: https://coveralls.io/repos/github/enyx-opensource/yassh/badge.svg?branch=master
+   :target: https://coveralls.io/github/enyx-opensource/yassh?branch=master
    :alt: Coverage Status
 
-.. image:: https://codeclimate.com/github/Enyx-SA/yassh/badges/gpa.svg
-   :target: https://codeclimate.com/github/Enyx-SA/yassh
+.. image:: https://codeclimate.com/github/enyx-opensource/yassh/badges/gpa.svg
+   :target: https://codeclimate.com/github/enyx-opensource/yassh
    :alt: Code Climate
 
-.. image:: https://codeclimate.com/github/Enyx-SA/yassh/badges/issue_count.svg
-   :target: https://codeclimate.com/github/Enyx-SA/yassh
+.. image:: https://codeclimate.com/github/enyx-opensource/yassh/badges/issue_count.svg
+   :target: https://codeclimate.com/github/enyx-opensource/yassh
    :alt: Issue Count
 
 yassh
