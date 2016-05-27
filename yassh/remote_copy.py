@@ -42,7 +42,8 @@ class RemoteCopy(Execution):
     '''
 
     def __init__(self, reactor, host, username,
-                 local_path, remote_path, logfile=None):
+                 local_path, remote_path,
+                 logfile=None, remote_port=22):
         '''
         Create a new shell execution without starting it.
 
@@ -60,10 +61,13 @@ class RemoteCopy(Execution):
             The file or directory remote path.
         logfile : stream
             A file object used to log shell execution output.
+        port : int
+            The ssh remote port number used.
         '''
         super(RemoteCopy, self).__init__(reactor, logfile)
 
         self.__host = host
+        self.__remote_port = remote_port
         self.__username = username
         self.__local_path = local_path.replace('"', r'\"')
         self.__remote_path = remote_path.replace('"', r'\"')
@@ -75,8 +79,9 @@ class RemoteCopy(Execution):
         '''
         Start the execution.
         '''
-        cmd = ('scp -r -o BatchMode=yes "{0}" '
-               '"{1}"@{2}:"{3}"').format(self.__local_path,
+        cmd = ('scp -r -o BatchMode=yes -P {0} "{1}" '
+               '"{2}"@{3}:"{4}"').format(self.__remote_port,
+                                         self.__local_path,
                                          self.__username,
                                          self.__host,
                                          self.__remote_path)
@@ -90,7 +95,9 @@ class RemoteCopy(Execution):
 
 
 def remote_copy(host, username, local_path, remote_path,
-                logfile=None, ms_timeout=-1):
+                logfile=None,
+                ms_timeout=-1,
+                remote_port=22):
     '''
     Copy ``local_path`` to ``remote_path`` on ``host`` as ``username``.
 
@@ -102,7 +109,9 @@ def remote_copy(host, username, local_path, remote_path,
         The execution result code.
     '''
     r = Reactor()
-    c = RemoteCopy(r, host, username, local_path, remote_path, logfile)
+    c = RemoteCopy(r, host, username, local_path, remote_path,
+                   logfile=logfile,
+                   remote_port=remote_port)
 
     with c:
         while r.run(ms_timeout) > 0:

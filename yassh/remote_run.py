@@ -41,7 +41,8 @@ class RemoteRun(Execution):
         The return code of the shell execution.
     '''
 
-    def __init__(self, reactor, host, username, cmd, logfile=None):
+    def __init__(self, reactor, host, username, cmd,
+                 logfile=None, remote_port=22):
         '''
         Create a new shell execution without starting it.
 
@@ -57,10 +58,13 @@ class RemoteRun(Execution):
             A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
         logfile : stream
             A file object used to log shell execution output.
+        remote_port : int
+            The ssh remote port number used.
         '''
         super(RemoteRun, self).__init__(reactor, logfile)
 
         self.__host = host
+        self.__remote_port = remote_port
         self.__username = username
         self.__cmd = cmd.replace('"', r'\"')
 
@@ -71,8 +75,10 @@ class RemoteRun(Execution):
         '''
         Start the execution.
         '''
-        args = ['-o BatchMode=yes -o LogLevel=error',
-                '{0}@{1}'.format(self.__username, self.__host),
+        args = ['-o BatchMode=yes -o LogLevel=error -p {0} ',
+                '{1}@{2}'.format(self.__remote_port,
+                                 self.__username,
+                                 self.__host),
                 'bash -c "({0})< <(cat; pkill -P $$)"'.format(self.__cmd)]
         self._start('ssh', args)
 
@@ -83,7 +89,10 @@ class RemoteRun(Execution):
         self._send_eof()
 
 
-def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
+def remote_run(host, username, cmd,
+               logfile=None,
+               ms_timeout=-1,
+               remote_port=22):
     '''
     Run ``cmd`` on ``host`` as ``username``.
 
@@ -95,7 +104,9 @@ def remote_run(host, username, cmd, logfile=None, ms_timeout=-1):
         The execution result code.
     '''
     r = Reactor()
-    c = RemoteRun(r, host, username, cmd, logfile)
+    c = RemoteRun(r, host, username, cmd,
+                  logfile=logfile,
+                  remote_port=remote_port)
 
     with c:
         while r.run(ms_timeout) > 0:
