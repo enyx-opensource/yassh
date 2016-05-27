@@ -71,7 +71,7 @@ class RemoteRun(Execution):
         '''
         Start the execution.
         '''
-        args = ['-o BatchMode=yes',
+        args = ['-o BatchMode=yes -o LogLevel=error',
                 '{0}@{1}'.format(self.__username, self.__host),
                 'bash -c "({0})< <(cat; pkill -P $$)"'.format(self.__cmd)]
         self._start('ssh', args)
