@@ -63,7 +63,7 @@ To install latest release::
 
 To install latest code::
 
-    pip install git+https://github.com/Enyx-SA/yassh.git
+    pip install git+https://github.com/enyx-opensource/yassh.git
 
 Testing
 -------

@@ -24,7 +24,7 @@ setup(
     description='A remote process launcher.',
     long_description=_readme(),
 
-    url='https://github.com/Enyx-SA/yassh',
+    url='https://github.com/enyx-opensource/yassh.git',
 
     author='David Keller',
     author_email='david.keller@enyx.com',
