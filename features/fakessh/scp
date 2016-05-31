@@ -15,7 +15,7 @@ def parse_args():
     return parser.parse_args()
 
 def main(args):
-    destination = re.match('\w+@\w+:(.+)',
+    destination = re.match('["\w]+@\w+:(.+)',
                            args.destination).group(1)
 
     if args.source == '/dev/zero' and destination == '/dev/null':

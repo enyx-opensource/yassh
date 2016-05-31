@@ -79,13 +79,15 @@ class RemoteCopy(Execution):
         '''
         Start the execution.
         '''
-        cmd = ('scp -r -o BatchMode=yes -P {0} "{1}" '
-               '"{2}"@{3}:"{4}"').format(self.__remote_port,
-                                         self.__local_path,
-                                         self.__username,
+        args = ['-r',
+                '-P {0}'.format(self.__remote_port),
+                '-o BatchMode=yes',
+                '-o LogLevel=error',
+                '{0}'.format(self.__local_path),
+                '"{0}"@{1}:"{2}"'.format(self.__username,
                                          self.__host,
-                                         self.__remote_path)
-        self._start(cmd)
+                                         self.__remote_path)]
+        self._start('scp', args)
 
     def stop(self):
         '''
