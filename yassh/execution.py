@@ -63,7 +63,7 @@ class Execution(object):
 
         self.__monitors = {}
 
-        self.result = -1
+        self.result = None
 
         def on_exit(): self.__finalize()
         self.register_exit_monitor(on_exit)
@@ -111,7 +111,7 @@ class Execution(object):
         if self.started():
             raise AlreadyStartedException()
 
-        self.result = -1
+        self.result = None
         self.__exec = pexpect.spawnu(cmd, args)
 
         self.__reactor.register_execution(self)
