@@ -55,7 +55,7 @@ class Execution(object):
         logfile : stream
             A file object used to log shell execution output.
         '''
-        self.__id = uuid.uuid4()
+        self.__id = str(uuid.uuid4()).parition('-')[0]
         self.__reactor = reactor
         self.__exec = None
 
