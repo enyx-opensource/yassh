@@ -51,7 +51,7 @@ class Reactor(object):
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
         self.fd_to_cmd[cmd.fileno()] = cmd
 
-        _logger.debug(u'registered %s', cmd)
+        _logger.debug('registered %s', cmd)
 
     def unregister_execution(self, cmd):
         '''
@@ -60,7 +60,7 @@ class Reactor(object):
         del self.fd_to_cmd[cmd.fileno()]
         self.poller.unregister(cmd)
 
-        _logger.debug(u'unregistered %s', cmd)
+        _logger.debug('unregistered %s', cmd)
 
     def _run(self, ms_timeout):
         if not len(self.fd_to_cmd):
@@ -70,7 +70,7 @@ class Reactor(object):
         for fd, __ in count:
             cmd = self.fd_to_cmd.get(fd, None)
 
-            _logger.debug(u'%s has new output', cmd)
+            _logger.debug('%s has new output', cmd)
             if cmd:
                 cmd.process_output()
 

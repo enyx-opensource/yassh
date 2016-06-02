@@ -11,4 +11,7 @@ def step_impl(context, name):
 @step(u'the output buffer "{name}" content is')
 def step_impl(context, name):
     value = context.out_buffers[name].getvalue().strip()
+    print(value.encode('utf-8'))
+    print('--')
+    print(context.text)
     value.should_not.be.different_of(context.text)

@@ -5,13 +5,13 @@ import sys
 from yassh import RemoteCopy, remote_copy
 
 @step(u'a remote copy from "{source}" file to "{destination}" file'
-       ' is created as "{name}"')
+      u' is created as "{name}"')
 def step_impl(context, source, destination, name):
     source = path.join(context.temp_directory, source)
     destination = path.join(context.temp_directory, destination)
 
     c = RemoteCopy(context.reactor,
-                  'localhost', 'login',
+                  u'localhost', u'login',
                   source, destination,
                   sys.stdout)
 
@@ -26,6 +26,6 @@ def step_impl(context, source, destination, name):
     source = path.join(context.temp_directory, source)
     destination = path.join(context.temp_directory, destination)
 
-    context.results[name] = remote_copy('localhost', 'login',
+    context.results[name] = remote_copy(u'localhost', u'login',
                                         source, destination,
                                         sys.stdout)

@@ -10,7 +10,7 @@ def _table_to_options(table):
 def _get_logfile(context):
     options = _table_to_options(context.table)
 
-    output = options.get('output', None)
+    output = options.get(u'output', None)
     if output:
         return context.out_buffers.get(output)
 
@@ -22,8 +22,8 @@ def step_impl(context, command, name):
     logfile = _get_logfile(context)
 
     c = RemoteRun(context.reactor,
-                 'localhost', 'login', command,
-                 logfile=logfile)
+                  u'localhost', u'login', command,
+                  logfile=logfile)
 
     def on_exit(): context.results[name] = c.result
     c.register_exit_monitor(on_exit)
@@ -33,4 +33,5 @@ def step_impl(context, command, name):
 
 @step(u'"{execution}" is remotely run as "{name}"')
 def step_impl(context, execution, name):
-    context.results[name] = remote_run('localhost', 'login', execution, sys.stdout)
+    context.results[name] = remote_run(u'localhost', u'login',
+                                       execution, sys.stdout)

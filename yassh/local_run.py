@@ -23,6 +23,7 @@ SOFTWARE.
 '''
 
 import logging
+from locale import getpreferredencoding
 
 from .exceptions import AlreadyStartedException
 from .execution import Execution
@@ -56,9 +57,9 @@ class LocalRun(Execution):
         '''
         super(LocalRun, self).__init__(reactor, logfile)
 
-        self.__cmd = cmd.replace('"', r'\"')
+        self.__cmd = cmd.replace(u'"', ur'\"')
 
-        _logger.debug(u'created local run "%s"', cmd)
+        _logger.debug('created local run "%s"', cmd)
 
     def start(self):
         '''

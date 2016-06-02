@@ -69,25 +69,29 @@ class RemoteCopy(Execution):
         self.__host = host
         self.__remote_port = remote_port
         self.__username = username
-        self.__local_path = local_path.replace('"', r'\"')
-        self.__remote_path = remote_path.replace('"', r'\"')
+        self.__local_path = local_path.replace(u'"', ur'\"')
+        self.__remote_path = remote_path.replace(u'"', ur'\"')
 
-        _logger.debug(u'created copy "%s" -> "%s" on %s@%s',
-                      local_path, remote_path, username, host)
+        _logger.debug('created copy "%s" -> "%s" on %s@%s:%d',
+                      self.__local_path,
+                      self.__remote_path,
+                      self.__username,
+                      self.__host,
+                      self.__remote_port)
 
     def start(self):
         '''
         Start the execution.
         '''
-        args = ['-r',
-                '-P {0}'.format(self.__remote_port),
-                '-o BatchMode=yes',
-                '-o LogLevel=error',
-                '{0}'.format(self.__local_path),
-                '"{0}"@{1}:"{2}"'.format(self.__username,
-                                         self.__host,
-                                         self.__remote_path)]
-        self._start('scp', args)
+        args = [u'-r',
+                u'-P {0}'.format(self.__remote_port),
+                u'-o BatchMode=yes',
+                u'-o LogLevel=error',
+                u'{0}'.format(self.__local_path),
+                u'"{0}"@{1}:"{2}"'.format(self.__username,
+                                          self.__host,
+                                          self.__remote_path)]
+        self._start(u'scp', args)
 
     def stop(self):
         '''

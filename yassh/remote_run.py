@@ -66,21 +66,24 @@ class RemoteRun(Execution):
         self.__host = host
         self.__remote_port = remote_port
         self.__username = username
-        self.__cmd = cmd.replace('"', r'\"')
+        self.__cmd = cmd.replace(u'"', ur'\"')
 
-        _logger.debug(u'created remote run "%s" on %s@%s',
-                      cmd, username, host)
+        _logger.debug('created remote run "%s" on %s@%s:%d',
+                      self.__cmd,
+                      self.__username,
+                      self.__host,
+                      self.__remote_port)
 
     def start(self):
         '''
         Start the execution.
         '''
-        args = ['-p {0}'.format(self.__remote_port),
-                '-o BatchMode=yes',
-                '-o LogLevel=error',
-                '{0}@{1}'.format(self.__username, self.__host),
-                'bash -c "({0})< <(cat; pkill -P $$)"'.format(self.__cmd)]
-        self._start('ssh', args)
+        args = [u'-p {0}'.format(self.__remote_port),
+                u'-o BatchMode=yes',
+                u'-o LogLevel=error',
+                u'{0}@{1}'.format(self.__username, self.__host),
+                u'bash -c "({0})< <(cat; pkill -P $$)"'.format(self.__cmd)]
+        self._start(u'ssh', args)
 
     def stop(self):
         '''
