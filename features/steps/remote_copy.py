@@ -4,6 +4,7 @@ import sys
 
 from yassh import RemoteCopy, remote_copy
 
+
 @step(u'a remote copy from "{source}" file to "{destination}" file'
       u' is created as "{name}"')
 def step_impl(context, source, destination, name):
@@ -11,9 +12,9 @@ def step_impl(context, source, destination, name):
     destination = path.join(context.temp_directory, destination)
 
     c = RemoteCopy(context.reactor,
-                  u'localhost', u'login',
-                  source, destination,
-                  sys.stdout)
+                   u'localhost', u'login',
+                   source, destination,
+                   sys.stdout)
 
     def on_exit(): context.results[name] = c.result
     c.register_exit_monitor(on_exit)

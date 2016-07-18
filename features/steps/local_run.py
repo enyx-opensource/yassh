@@ -7,6 +7,7 @@ from yassh import LocalRun, local_run
 def _table_to_options(table):
     return dict([(a['option'], a['value']) for a in table or []])
 
+
 def _get_logfile(context):
     options = _table_to_options(context.table)
 

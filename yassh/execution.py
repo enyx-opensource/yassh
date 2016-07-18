@@ -241,5 +241,3 @@ class Execution(object):
         if monitor is pexpect.EOF:
             return u'@eof@'
         return monitor
-
-
