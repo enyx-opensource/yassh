@@ -57,7 +57,7 @@ class LocalRun(Execution):
         '''
         super(LocalRun, self).__init__(reactor, logfile)
 
-        self.__cmd = cmd.replace(u'"', ur'\"')
+        self.__cmd = cmd.replace(u'"', u'\\"')
 
         _logger.debug('created local run "%s"', cmd)
 

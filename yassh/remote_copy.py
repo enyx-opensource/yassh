@@ -69,8 +69,8 @@ class RemoteCopy(Execution):
         self.__host = host
         self.__remote_port = remote_port
         self.__username = username
-        self.__local_path = local_path.replace(u'"', ur'\"')
-        self.__remote_path = remote_path.replace(u'"', ur'\"')
+        self.__local_path = local_path.replace(u'"', u'\\"')
+        self.__remote_path = remote_path.replace(u'"', u'\\"')
 
         _logger.debug('created copy "%s" -> "%s" on %s@%s:%d',
                       self.__local_path,
