@@ -10,11 +10,6 @@ _logger = logging.getLogger(__name__)
 class RemoteRun(Execution):
     '''
     This class is used to run a shell execution.
-
-    Attributes
-    ----------
-    result : int
-        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, host, username, cmd,
@@ -22,20 +17,12 @@ class RemoteRun(Execution):
         '''
         Create a new shell execution without starting it.
 
-        Parameters
-        ----------
-        reactor : ``Reactor``
-            The reactor used to execute monitors.
-        host : str
-            The host used to run the shell execution.
-        username : str
-            The username used to to run the shell execution.
-        cmd : str
-            A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
-        logfile : stream
-            A file object used to log shell execution output.
-        remote_port : int
-            The ssh remote port number used.
+        :param Reactor reactor: The reactor used to execute monitors
+        :param str host: The host used to run the shell execution
+        :param str username: The username used to to run the shell execution
+        :param str cmd: str A binary or bash-compatible expression
+        :param file logfile: A file object used to log shell execution output
+        :param int remote_port: The ssh remote port number used
         '''
         super(RemoteRun, self).__init__(reactor, logfile)
 
@@ -73,14 +60,13 @@ def remote_run(host, username, cmd,
                ms_timeout=-1,
                remote_port=22):
     '''
-    Run ``cmd`` on ``host`` as ``username``.
+    Run `cmd` on `host` as `username`.
 
-    Log execution output into ``logfile`` if not None.
-    Wait ``ms_timeout`` for execution to complete.
+    Log execution output into `logfile` if not None.
+    Wait `ms_timeout` for execution to complete.
 
-    Returns:
-    int
-        The execution result code.
+    :rtype: int
+    :return: The execution result code
     '''
     r = Reactor()
     c = RemoteRun(r, host, username, cmd,

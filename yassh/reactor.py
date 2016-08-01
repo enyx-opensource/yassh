@@ -19,10 +19,12 @@ class Reactor(object):
 
     def register_execution(self, cmd):
         '''
-        Register a new ``cmd`` on the reactor.
+        Register a new `cmd` on the reactor.
 
-        This will allow reactor to monitor ``cmd`` output
-        and execute ``cmd`` monitor accordingly.
+        This will allow reactor to monitor `cmd` output
+        and execute `cmd` monitor accordingly.
+
+        :param Execution cmd: The cmd to register
         '''
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
         self.fd_to_cmd[cmd.fileno()] = cmd
@@ -31,7 +33,9 @@ class Reactor(object):
 
     def unregister_execution(self, cmd):
         '''
-        Unregister a ``cmd``.
+        Unregister a `cmd`.
+
+        :param Execution cmd: The cmd to unregister
         '''
         del self.fd_to_cmd[cmd.fileno()]
         self.poller.unregister(cmd)
@@ -54,13 +58,11 @@ class Reactor(object):
 
     def run(self, ms_timeout):
         '''
-        Wait ``ms_timeout`` for some registered execution(s) to generate
+        Wait `ms_timeout` for some registered execution(s) to generate
         output and execute associated monitor(s).
 
-        Returns
-        -------
-        int
-            The count of execution that generated output.
+        :rtype: int
+        :return: The count of execution that generated output
         '''
         try:
             return self._run(ms_timeout)

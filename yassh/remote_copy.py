@@ -10,11 +10,6 @@ class RemoteCopy(Execution):
     '''
     This class is used to copy a file from localhost
     to a remote host.
-
-    Attributes
-    ----------
-    result : int
-        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, host, username,
@@ -23,22 +18,13 @@ class RemoteCopy(Execution):
         '''
         Create a new shell execution without starting it.
 
-        Parameters
-        ----------
-        reactor : ``Reactor``
-            The reactor used to execute monitors.
-        host : str
-            The host used to run the shell execution.
-        username : str
-            The username used to to run the shell execution.
-        local_path: str
-            The file or directory local path.
-        remote_path : str
-            The file or directory remote path.
-        logfile : stream
-            A file object used to log shell execution output.
-        port : int
-            The ssh remote port number used.
+        :param Reactor reactor: The reactor used to execute monitors
+        :param str host: The host used to run the shell execution
+        :param str username: The username used to to run the shell execution
+        :param str local_path: The file or directory local path
+        :param str remote_path: The file or directory remote path
+        :param file logfile: A file object used to log shell execution output
+        :param int port: The ssh remote port number used
         '''
         super(RemoteCopy, self).__init__(reactor, logfile)
 
@@ -81,14 +67,13 @@ def remote_copy(host, username, local_path, remote_path,
                 ms_timeout=-1,
                 remote_port=22):
     '''
-    Copy ``local_path`` to ``remote_path`` on ``host`` as ``username``.
+    Copy `local_path` to `remote_path` on `host` as `username`.
 
-    Log execution output into ``logfile`` if not None.
-    Wait ``ms_timeout`` for execution to complete.
+    Log execution output into `logfile` if not None.
+    Wait `ms_timeout` for execution to complete.
 
-    Returns:
-    int
-        The execution result code.
+    :rtype: int
+    :return: The execution result code
     '''
     r = Reactor()
     c = RemoteCopy(r, host, username, local_path, remote_path,

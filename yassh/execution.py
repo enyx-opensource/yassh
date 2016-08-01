@@ -11,25 +11,14 @@ _logger = logging.getLogger(__name__)
 class Execution(object):
     '''
     This class is used to run a shell execution.
-
-    Attributes
-    ----------
-    result : int
-        The return code of the shell execution.
     '''
 
     def __init__(self, reactor, logfile):
         '''
-        Create a new shell execution without starting it.
+        Create a new shell execution without starting it
 
-        Parameters
-        ----------
-        reactor : ``Reactor``
-            The reactor used to execute monitors.
-        cmd : str
-            A binary or bash-compatible expression. (e.g. 'echo ok && sleep 1')
-        logfile : stream
-            A file object used to log shell execution output.
+        :param Reactor reactor: The reactor used to execute monitors
+        :param file logfile: A file object used to log shell execution output
         '''
         self.__id = str(uuid.uuid4()).partition('-')[0]
         self.__reactor = reactor
@@ -39,7 +28,7 @@ class Execution(object):
 
         self.__monitors = {}
 
-        self.result = None
+        self.__result = None
 
         def on_exit(): self.__finalize()
         self.register_exit_monitor(on_exit)
@@ -74,11 +63,13 @@ class Execution(object):
         self.__exec.close()
 
         if self.__exec.exitstatus is not None:
-            self.result = self.__exec.exitstatus
+            self.__result = self.__exec.exitstatus
+        else:
+            self.__result = self.__exec.signalstatus
 
         self.__exec = None
 
-        _logger.debug('finalized %s (%d)', self, self.result)
+        _logger.debug('finalized %s (%d)', self, self.__result)
 
     def _start(self, cmd, args=[]):
         '''
@@ -87,7 +78,7 @@ class Execution(object):
         if self.started():
             raise AlreadyStartedException()
 
-        self.result = None
+        self.__result = None
         self.__exec = pexpect.spawnu(cmd, args)
 
         self.__reactor.register_execution(self)
@@ -118,14 +109,19 @@ class Execution(object):
 
         _logger.debug('terminated %s', self)
 
+    @property
+    def result(self):
+        '''
+        The return code of the execution
+        '''
+        return self.__result
+
     def started(self):
         '''
         Check if the execution is started.
 
-        Returns
-        -------
-        bool
-            True if started, False otherwise.
+        :rtype: bool
+        :return: True if started, False otherwise
         '''
         return self.__exec is not None
 
@@ -133,28 +129,18 @@ class Execution(object):
         '''
         Return the execution output pipe fileno.
 
-        Note
-        ----
-        This is used by the reactor.
-
-        Returns
-        -------
-        int
-            The pipe fileno.
+        :rtype: int
+        :return: The pipe fileno
         '''
         return self.__exec.fileno()
 
     def register_monitor(self, pattern, callback):
         '''
-        Register a ``callback`` to be executed once the ``pattern`` has matched
+        Register a `callback` to be executed once the `pattern` has matched
         execution output.
 
-        Parameters
-        ----------
-        pattern : str
-            A pattern to match.
-        callback : function
-            A callback to invoke.
+        :param str pattern: A pattern to match
+        :param callable callback: A callback to invoke
         '''
         self.__monitors.setdefault(pattern, []).append(callback)
 
@@ -163,12 +149,9 @@ class Execution(object):
 
     def register_exit_monitor(self, callback):
         '''
-        Register ``callback`` to be executed once the execution has terminated.
+        Register `callback` to be executed once the execution has terminated.
 
-        Parameters
-        ----------
-        callback : function
-            A callback to invoke.
+        :param callable callback: A callback to invoke
         '''
         self.register_monitor(pexpect.EOF, callback)
 
@@ -191,8 +174,8 @@ class Execution(object):
         '''
         Return the string represensation of the execution.
 
-        Returns:
-            str: A string represensation of the execution.
+        :rtype: str
+        :return: A string represensation of the execution
         '''
         return 'execution <{0}>'.format(repr(self))
 
@@ -200,8 +183,8 @@ class Execution(object):
         '''
         Return the id of the execution.
 
-        Returns:
-            str: An id.
+        :rtype str:
+        :return: An id
         '''
         return str(self.__id)
 
