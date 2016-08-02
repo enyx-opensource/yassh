@@ -14,6 +14,10 @@
    :target: https://codeclimate.com/github/enyx-opensource/yassh
    :alt: Issue Count
 
+.. image:: https://readthedocs.org/projects/yassh/badge/?version=latest
+  :target: http://yassh.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
+
 yassh
 =====
 
