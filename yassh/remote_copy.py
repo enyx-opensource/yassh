@@ -72,6 +72,13 @@ def remote_copy(host, username, local_path, remote_path,
     Log execution output into `logfile` if not None.
     Wait `ms_timeout` for execution to complete.
 
+    :param str host: The host used to run the shell execution
+    :param str username: The username used to to run the shell execution
+    :param str local_path: The file or directory local path
+    :param str remote_path: The file or directory remote path
+    :param file logfile: A file object used to log shell execution output
+    :param int ms_timeout: Duration waited for an event to occur
+    :param int remote_port: The ssh remote port number used
     :rtype: int
     :return: The execution result code
     '''

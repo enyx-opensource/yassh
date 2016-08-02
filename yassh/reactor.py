@@ -61,8 +61,9 @@ class Reactor(object):
         Wait `ms_timeout` for some registered execution(s) to generate
         output and execute associated monitor(s).
 
+        :param int ms_timeout: Duration waited for an event to occur
         :rtype: int
-        :return: The count of execution that generated output
+        :return: The event(s) count
         '''
         try:
             return self._run(ms_timeout)

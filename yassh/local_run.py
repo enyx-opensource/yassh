@@ -47,6 +47,9 @@ def local_run(cmd, logfile=None, ms_timeout=-1):
     Log execution output into `logfile` if not None.
     Wait `ms_timeout` for execution to complete.
 
+    :param str cmd: str A binary or bash-compatible expression
+    :param file logfile: A file object used to log shell execution output
+    :param int ms_timeout: Duration waited for an event to occur
     :rtype: int
     :return: The execution result code
     '''

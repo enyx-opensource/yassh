@@ -1,5 +1,5 @@
-Yassh API
-============
+API
+===
 
 The best place to start is the examples folder before diving into the API.
 
