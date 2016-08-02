@@ -20,6 +20,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+import yassh
 
 # -- General configuration ------------------------------------------------
 
@@ -62,7 +63,7 @@ author = 'David Keller'
 # built documents.
 #
 # The short X.Y version.
-version = '0.8.0'
+version = yassh.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -124,7 +125,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+#html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

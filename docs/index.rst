@@ -12,6 +12,6 @@ asynchronous, dependent remote and local tasks.
 .. toctree::
    :maxdepth: 2
 
-   intro
+   installation
    tutorial
    api
