@@ -17,6 +17,8 @@ for c in [c1, c2, c3]:
     c.register_exit_monitor(raise_on_failure)
     c.start()
 
-timeout = -1 # Infinite
+
+# Infinite
+timeout = -1
 while r.run(timeout) > 0:
     pass
