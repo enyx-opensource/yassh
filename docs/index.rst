@@ -6,7 +6,7 @@
 Welcome to yassh's documentation!
 =================================
 
-Yassh is a python library used to run 
+Yassh is a python library used to run
 asynchronous, dependent remote and local tasks.
 
 .. toctree::
