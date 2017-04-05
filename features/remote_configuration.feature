@@ -39,3 +39,6 @@ Feature: remote configuration
 
         When IdentityFile of remote configuration is removed
         Then IdentityFile of remote configuration is unset
+
+        When a RemoteConfiguration is instantiated for toto@titi:4444
+        Then remote configuration has __repr__ with port=4444 and user=toto
