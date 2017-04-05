@@ -1,8 +1,7 @@
 from behave import *
 import sys
 
-from yassh import RemoteRun, remote_run
-
+from yassh import RemoteRun, remote_run, RemoteConfiguration
 
 def _table_to_options(table):
     return dict([(a['option'], a['value']) for a in table or []])
@@ -22,9 +21,8 @@ def _get_logfile(context):
 def step_impl(context, command, name):
     logfile = _get_logfile(context)
 
-    c = RemoteRun(context.reactor,
-                  u'localhost', u'login', command,
-                  logfile=logfile)
+    remote = RemoteConfiguration(host=u'localhost')
+    c = RemoteRun(context.reactor, remote, command, logfile=logfile)
 
     def on_exit(): context.results[name] = c.result
     c.register_exit_monitor(on_exit)
@@ -34,5 +32,5 @@ def step_impl(context, command, name):
 
 @step(u'"{execution}" is remotely run as "{name}"')
 def step_impl(context, execution, name):
-    context.results[name] = remote_run(u'localhost', u'login',
-                                       execution, sys.stdout)
+    remote = RemoteConfiguration(host=u'localhost')
+    context.results[name] = remote_run(remote, execution, sys.stdout)
