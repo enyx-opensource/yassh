@@ -68,7 +68,7 @@ class RemoteConfiguration(object):
     def get_args(self):
         ''' Return all arguments as an array '''
         args = []
-        for k, value in self._ssh_config.iteritems():
+        for k, value in self._ssh_config.items():
             # All ssh options take one argument
             args.append(u'-o')
             args.append('{k}={v}'.format(k=k, v=value))

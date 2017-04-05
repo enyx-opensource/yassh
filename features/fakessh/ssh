@@ -15,9 +15,9 @@ def parse_args():
 def main(args):
     expected_o_args = ['BatchMode=yes', 'LogLevel=error']
     if args.o != ['BatchMode=yes', 'LogLevel=error']:
-        print 'Expected {expected} arguments but got {reality}'.format(
+        print ('Expected {expected} arguments but got {reality}'.format(
             expected=expected_o_args,
-            reality=args.o)
+            reality=args.o))
         return 10
 
     return subprocess.call(args.cmd, shell=True)
