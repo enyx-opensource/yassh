@@ -2,6 +2,7 @@ import logging
 
 from .execution import Execution
 from .reactor import Reactor
+from .remote_configuration import RemoteConfiguration
 
 _logger = logging.getLogger(__name__)
 
@@ -12,47 +13,40 @@ class RemoteCopy(Execution):
     to a remote host.
     '''
 
-    def __init__(self, reactor, host, username,
+    def __init__(self, reactor, remote,
                  local_path, remote_path,
-                 logfile=None, remote_port=22):
+                 logfile=None):
         '''
         Create a new shell execution without starting it.
 
         :param Reactor reactor: The reactor used to execute monitors
-        :param str host: The host used to run the shell execution
-        :param str username: The username used to to run the shell execution
+        :param remote a RemoteConfiguration object
         :param str local_path: The file or directory local path
         :param str remote_path: The file or directory remote path
         :param file logfile: A file object used to log shell execution output
-        :param int port: The ssh remote port number used
         '''
         super(RemoteCopy, self).__init__(reactor, logfile)
 
-        self.__host = host
-        self.__remote_port = remote_port
-        self.__username = username
+        self.__remote = remote
         self.__local_path = local_path.replace(u'"', u'\\"')
         self.__remote_path = remote_path.replace(u'"', u'\\"')
 
-        _logger.debug('created copy "%s" -> "%s" on %s@%s:%d',
+        _logger.debug('created copy "%s" -> "%s" on %s with options %s',
                       self.__local_path,
                       self.__remote_path,
-                      self.__username,
-                      self.__host,
-                      self.__remote_port)
+                      self.__remote.host,
+                      str(self.__remote))
 
     def start(self):
         '''
         Start the execution.
         '''
-        args = [u'-r',
-                u'-P {0}'.format(self.__remote_port),
-                u'-o BatchMode=yes',
-                u'-o LogLevel=error',
-                u'{0}'.format(self.__local_path),
-                u'"{0}"@{1}:"{2}"'.format(self.__username,
-                                          self.__host,
-                                          self.__remote_path)]
+        self.__remote.set('BatchMode', 'yes')
+        self.__remote.set('LogLevel', 'error')
+        args = self.__remote.get_args()
+        args += [u'-r',
+                 u'{0}'.format(self.__local_path),
+                 u'{0}:{1}'.format(self.__remote.host, self.__remote_path)]
         self._start(u'scp', args)
 
     def stop(self):
@@ -62,30 +56,26 @@ class RemoteCopy(Execution):
         self._terminate()
 
 
-def remote_copy(host, username, local_path, remote_path,
+def remote_copy(remote, local_path, remote_path,
                 logfile=None,
-                ms_timeout=-1,
-                remote_port=22):
+                ms_timeout=-1):
     '''
-    Copy `local_path` to `remote_path` on `host` as `username`.
+    Copy `local_path` to `remote_path` on `remote.host`
 
     Log execution output into `logfile` if not None.
     Wait `ms_timeout` for execution to complete.
 
-    :param str host: The host used to run the shell execution
-    :param str username: The username used to to run the shell execution
+    :param remote a RemoteConfiguration object
     :param str local_path: The file or directory local path
     :param str remote_path: The file or directory remote path
     :param file logfile: A file object used to log shell execution output
     :param int ms_timeout: Duration waited for an event to occur
-    :param int remote_port: The ssh remote port number used
     :rtype: int
     :return: The execution result code
     '''
     r = Reactor()
-    c = RemoteCopy(r, host, username, local_path, remote_path,
-                   logfile=logfile,
-                   remote_port=remote_port)
+    c = RemoteCopy(r, remote, local_path, remote_path,
+                   logfile=logfile)
 
     with c:
         while r.run(ms_timeout) > 0:

@@ -7,16 +7,21 @@ import re
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o')
+    parser.add_argument('-o', action='append')
     parser.add_argument('-r', action='store_true')
-    parser.add_argument('-P')
     parser.add_argument('source')
     parser.add_argument('destination')
     return parser.parse_args()
 
 def main(args):
-    destination = re.match('["\w]+@\w+:(.+)',
-                           args.destination).group(1)
+    destination = re.match('\w+:(.+)', args.destination).group(1)
+
+    expected_o_args = ['BatchMode=yes', 'LogLevel=error']
+    if args.o != ['BatchMode=yes', 'LogLevel=error']:
+        print ('Expected {expected} arguments but got {reality}'.format(
+            expected=expected_o_args,
+            reality=args.o))
+        return 10
 
     if args.source == '/dev/zero' and destination == '/dev/null':
         signal.pause()
