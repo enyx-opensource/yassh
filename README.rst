@@ -30,14 +30,21 @@ Usage
 .. code-block:: python
 
     import logging
-    from yassh import Reactor, RemoteRun, LocalRun
+    from yassh import Reactor, RemoteRun, RemoteConfiguration, LocalRun
 
     logging.basicConfig(level=logging.DEBUG)
 
+    # Create a remote ; only host parameter is mandatory
+    remote = RemoteConfiguration(host='localhost', username='user')
+
+    # ssh_config(5) options can be set in RemoteConfiguration object
+    remote.set('Compression', 'yes')
+    remote.set('CompressionLevel', '9')
+
     r = Reactor()
-    c1 = RemoteRun(r, 'localhost', 'user', 'sleep 5')
+    c1 = RemoteRun(r, remote, 'sleep 5')
     c2 = LocalRun(r, 'echo ok')
-    c3 = RemoteRun(r, 'localhost', 'user', 'echo "finished" && sleep 1')
+    c3 = RemoteRun(r, remote, 'echo "finished" && sleep 1')
 
 
     def start_c2():
