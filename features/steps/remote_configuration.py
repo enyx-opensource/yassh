@@ -1,10 +1,9 @@
-from os import path
 from behave import *
 import sys
 
 from yassh import RemoteConfiguration
 
-@when(u'a RemoteConfiguration is instantiated for {user}@{host}:{port}')
+@step(u'a RemoteConfiguration is instantiated for {user}@{host}:{port}')
 def step_impl(context, host, user, port):
     context.remote = RemoteConfiguration(host=host, username=user, port=port)
 
