@@ -31,7 +31,8 @@ class LocalRun(Execution):
         '''
         Start the execution.
         '''
-        self._start(self.__cmd)
+        args = ['-c', '({0})< <(cat; pkill -P $$)'.format(self.__cmd)]
+        self._start(u'bash', args)
 
     def stop(self):
         '''
