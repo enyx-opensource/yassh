@@ -1,6 +1,7 @@
 import logging
 import pexpect
 import signal
+import weakref
 import uuid
 
 from .exceptions import AlreadyStartedException
@@ -30,8 +31,7 @@ class Execution(object):
 
         self.__result = None
 
-        def on_exit(): self.__finalize()
-        self.register_exit_monitor(on_exit)
+        self.__register_finalize()
 
         _logger.debug('created "%s"', self)
 
@@ -54,6 +54,11 @@ class Execution(object):
         '''
         self.__finalize()
         return False
+
+    def __register_finalize(self):
+        weakself = weakref.ref(self)
+        def on_exit(): weakself().__finalize()
+        self.register_exit_monitor(on_exit)
 
     def __finalize(self):
         if not self.started():

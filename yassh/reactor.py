@@ -1,6 +1,7 @@
 import logging
 import errno
 import select
+import weakref
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class Reactor(object):
         :param Execution cmd: The cmd to register
         '''
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
-        self.fd_to_cmd[cmd.fileno()] = cmd
+        self.fd_to_cmd[cmd.fileno()] = weakref.ref(cmd)
 
         _logger.debug('registered %s', cmd)
 
@@ -48,10 +49,12 @@ class Reactor(object):
 
         count = self.poller.poll(ms_timeout)
         for fd, __ in count:
-            cmd = self.fd_to_cmd.get(fd, None)
+            weakcmd = self.fd_to_cmd.get(fd, None)
 
-            _logger.debug('%s has new output', cmd)
+            cmd = weakcmd() if weakcmd else None
+
             if cmd:
+                _logger.debug('%s has new output', cmd)
                 cmd.process_output()
 
         return len(count)

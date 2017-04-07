@@ -48,4 +48,4 @@ Feature: simple run
         When no execution is started
 
         Then stopping the execution "echo_remote" should not raise
-        And stopping the execution "echo_remote" should not raise
+        And stopping the execution "echo_local" should not raise
