@@ -54,8 +54,7 @@ class RemoteConfiguration(object):
 
     def unset(self, key):
         ''' Remove an ssh_config entry '''
-        if key in self._ssh_config:
-            del self._ssh_config[key]
+        self._ssh_config.pop(key, None)
 
     @property
     def host(self):
