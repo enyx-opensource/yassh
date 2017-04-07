@@ -20,7 +20,7 @@ class RemoteCopy(Execution):
         Create a new shell execution without starting it.
 
         :param Reactor reactor: The reactor used to execute monitors
-        :param remote a RemoteConfiguration object
+        :param RemoteConfiguration remote: The remote configuration
         :param str local_path: The file or directory local path
         :param str remote_path: The file or directory remote path
         :param file logfile: A file object used to log shell execution output

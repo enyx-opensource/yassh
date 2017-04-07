@@ -1,12 +1,13 @@
-''' Ssh/scp configuration '''
-
 class RemoteConfiguration(object):
-    ''' Configuration of an ssh connection with ssh_config(5) parameters made available '''
+    '''
+    Configuration of an ssh connection with ssh_config(5)
+    parameters made available
+    '''
     def __init__(self, host, username=None, port=None):
         '''
-        :param host Distant machine hostname
-        :param username Distant machine login (if None, let ssh decide)
-        :param port Connection port (if None, let ssh decide)
+        :param str host: Distant machine hostname
+        :param str username: Distant machine login (if None, let ssh decide)
+        :param int port: Connection port (if None, let ssh decide)
         '''
         self._host = host
         self._ssh_config = {}
@@ -16,30 +17,26 @@ class RemoteConfiguration(object):
     @property
     def username(self):
         ''' Username on distant host '''
-        if 'User' in self._ssh_config:
-            return self._ssh_config['User']
-        return None
+        return self._ssh_config.get('User', None)
 
     @username.setter
     def username(self, value):
         if value is not None:
             self._ssh_config['User'] = value
-        elif 'User' in self._ssh_config:
-            del self._ssh_config['User']
+        else:
+            self._ssh_config.pop('User', None)
 
     @property
     def port(self):
         ''' Port to connect to '''
-        if 'Port' in self._ssh_config:
-            return self._ssh_config['Port']
-        return None
+        return self._ssh_config.get('Port', None)
 
     @port.setter
     def port(self, value):
         if value is not None:
             self._ssh_config['Port'] = value
-        elif 'Port' in self._ssh_config:
-            del self._ssh_config['Port']
+        else:
+            self._ssh_config.pop('Port', None)
 
     def get(self, key):
         '''

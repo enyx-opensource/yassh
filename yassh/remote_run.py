@@ -5,6 +5,7 @@ from .reactor import Reactor
 
 _logger = logging.getLogger(__name__)
 
+
 class RemoteRun(Execution):
     '''
     This class is used to run a shell execution.
@@ -16,7 +17,7 @@ class RemoteRun(Execution):
         Create a new shell execution without starting it.
 
         :param Reactor reactor: The reactor used to execute monitors
-        :param remote a RemoteConfiguration object
+        :param RemoteConfiguration remote: The remote configuration
         :param str cmd: str A binary or bash-compatible expression
         :param file logfile: A file object used to log shell execution output
         :param int remote_port: The ssh remote port number used
@@ -57,7 +58,7 @@ def remote_run(remote, cmd,
     Log execution output into `logfile` if not None.
     Wait `ms_timeout` for execution to complete.
 
-    :param RemoteConfiguration remote: connection parameters (host, username, etc.)
+    :param RemoteConfiguration remote: The connection parameters
     :param str cmd: str A binary or bash-compatible expression
     :param file logfile: A file object used to log shell execution output
     :param int ms_timeout: Duration waited for an event to occur

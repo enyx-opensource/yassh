@@ -1,12 +1,13 @@
 import logging
-from yassh import Reactor, RemoteRun, LocalRun
+from yassh import Reactor, RemoteRun, RemoteConfiguration, LocalRun
 
 logging.basicConfig(level=logging.DEBUG)
 
 r = Reactor()
-c1 = RemoteRun(r, 'localhost', 'user', 'sleep 5')
+remote = RemoteConfiguration(host='localhost', username='user')
+c1 = RemoteRun(r, remote, 'sleep 5')
 c2 = LocalRun(r, 'echo ok')
-c3 = RemoteRun(r, 'localhost', 'user', 'echo "finished" && sleep 1')
+c3 = RemoteRun(r, remote, 'echo "finished" && sleep 1')
 
 
 def start_c2():
