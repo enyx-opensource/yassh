@@ -7,13 +7,13 @@ cd $(dirname $0)
 virtualenv env && source env/bin/activate
 pip install -r requirements.txt
 
-version=$(python -c 'import yassh; print yassh.__version__')
-
 python setup.py check --restructuredtext --metadata --strict
 behave
 
 rm -rf dist/*
 python setup.py sdist bdist_wheel
+
+version=$(python -c 'import yassh; print yassh.__version__')
 
 while true; do
     read -p "Do you wish to upload ${version} to pypi.python.org [Yn] ?" yn

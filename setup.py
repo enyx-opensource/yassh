@@ -37,9 +37,9 @@ setup(
         'pexpect',
     ],
 
-    extras_require={
-        'test': ['sure', 'behave', 'coverage']
-    },
+    tests_require=[
+        'sure', 'behave', 'coverage',
+    ],
 
     packages=['yassh'],
     platforms='UNIX'

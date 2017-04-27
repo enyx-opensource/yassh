@@ -20,7 +20,7 @@ Local execution
 .. autofunction:: yassh.local_run
 
 Remote configuration
-----------------
+--------------------
 .. autoclass:: yassh.RemoteConfiguration
    :members:
    :inherited-members:
