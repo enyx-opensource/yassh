@@ -19,12 +19,15 @@ class RemoteConfiguration(object):
         ''' Username on distant host '''
         return self._ssh_config.get('User', None)
 
+    def __set_property(self, key, value):
+        if value is not None:
+            self._ssh_config[key] = value
+        else:
+            self._ssh_config.pop(key, None)
+
     @username.setter
     def username(self, value):
-        if value is not None:
-            self._ssh_config['User'] = value
-        else:
-            self._ssh_config.pop('User', None)
+        self.__set_property('User', value)
 
     @property
     def port(self):
@@ -33,10 +36,7 @@ class RemoteConfiguration(object):
 
     @port.setter
     def port(self, value):
-        if value is not None:
-            self._ssh_config['Port'] = value
-        else:
-            self._ssh_config.pop('Port', None)
+        self.__set_property('Port', value)
 
     def get(self, key):
         '''
