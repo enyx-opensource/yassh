@@ -3,7 +3,7 @@ import logging
 from .execution import Execution
 from .reactor import Reactor
 
-_logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class RemoteRun(Execution):
@@ -27,9 +27,9 @@ class RemoteRun(Execution):
         self.__remote = remote
         self.__cmd = cmd.replace(u'"', u'\\"')
 
-        _logger.debug('created remote run "%s" with args "%s"',
-                      self.__cmd,
-                      remote)
+        LOGGER.debug('created remote run "%s" with args "%s"',
+                     self.__cmd,
+                     remote)
 
     def start(self):
         '''
@@ -65,11 +65,11 @@ def remote_run(remote, cmd,
     :rtype: int
     :return: The execution result code
     '''
-    r = Reactor()
-    c = RemoteRun(reactor=r, remote=remote, cmd=cmd, logfile=logfile)
+    reactor = Reactor()
+    proc = RemoteRun(reactor=reactor, remote=remote, cmd=cmd, logfile=logfile)
 
-    with c:
-        while r.run(ms_timeout) > 0:
+    with proc:
+        while reactor.run(ms_timeout) > 0:
             pass
 
-    return c.result
+    return proc.result

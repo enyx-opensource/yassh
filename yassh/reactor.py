@@ -3,7 +3,7 @@ import errno
 import select
 import weakref
 
-_logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Reactor(object):
@@ -30,7 +30,7 @@ class Reactor(object):
         self.poller.register(cmd.fileno(), select.POLLIN | select.POLLPRI)
         self.fd_to_cmd[cmd.fileno()] = weakref.ref(cmd)
 
-        _logger.debug('registered %s', cmd)
+        LOGGER.debug('registered %s', cmd)
 
     def unregister_execution(self, cmd):
         '''
@@ -41,23 +41,7 @@ class Reactor(object):
         del self.fd_to_cmd[cmd.fileno()]
         self.poller.unregister(cmd)
 
-        _logger.debug('unregistered %s', cmd)
-
-    def _run(self, ms_timeout):
-        if not len(self.fd_to_cmd):
-            return 0
-
-        count = self.poller.poll(ms_timeout)
-        for fd, __ in count:
-            weakcmd = self.fd_to_cmd.get(fd, None)
-
-            cmd = weakcmd() if weakcmd else None
-
-            if cmd:
-                _logger.debug('%s has new output', cmd)
-                cmd.process_output()
-
-        return len(count)
+        LOGGER.debug('unregistered %s', cmd)
 
     def run(self, ms_timeout):
         '''
@@ -68,9 +52,17 @@ class Reactor(object):
         :rtype: int
         :return: The event(s) count
         '''
-        try:
-            return self._run(ms_timeout)
-        except select.error as err:
-            if err[0] == errno.EINTR:
-                return 0
-            raise
+        if not self.fd_to_cmd:
+            return 0
+
+        count = self.poller.poll(ms_timeout)
+        for handle, __ in count:
+            weakcmd = self.fd_to_cmd.get(handle, None)
+
+            cmd = weakcmd() if weakcmd else None
+
+            if cmd:
+                LOGGER.debug('%s has new output', cmd)
+                cmd.process_output()
+
+        return len(count) or -errno.ETIMEDOUT

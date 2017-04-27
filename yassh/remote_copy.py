@@ -2,9 +2,8 @@ import logging
 
 from .execution import Execution
 from .reactor import Reactor
-from .remote_configuration import RemoteConfiguration
 
-_logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class RemoteCopy(Execution):
@@ -31,11 +30,11 @@ class RemoteCopy(Execution):
         self.__local_path = local_path.replace(u'"', u'\\"')
         self.__remote_path = remote_path.replace(u'"', u'\\"')
 
-        _logger.debug('created copy "%s" -> "%s" on %s with options %s',
-                      self.__local_path,
-                      self.__remote_path,
-                      self.__remote.host,
-                      str(self.__remote))
+        LOGGER.debug('created copy "%s" -> "%s" on %s with options %s',
+                     self.__local_path,
+                     self.__remote_path,
+                     self.__remote.host,
+                     str(self.__remote))
 
     def start(self):
         '''
@@ -73,12 +72,12 @@ def remote_copy(remote, local_path, remote_path,
     :rtype: int
     :return: The execution result code
     '''
-    r = Reactor()
-    c = RemoteCopy(r, remote, local_path, remote_path,
-                   logfile=logfile)
+    reactor = Reactor()
+    proc = RemoteCopy(reactor, remote, local_path, remote_path,
+                      logfile=logfile)
 
-    with c:
-        while r.run(ms_timeout) > 0:
+    with proc:
+        while reactor.run(ms_timeout) > 0:
             pass
 
-    return c.result
+    return proc.result

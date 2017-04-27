@@ -1,4 +1,5 @@
 from behave import *
+import sure
 
 from yassh import Reactor
 
@@ -10,5 +11,9 @@ def step_impl(context):
 
 @step(u'the reactor is run')
 def step_impl(context):
-    while context.reactor.run(5000) > 0:
-        pass
+    while True:
+        count = context.reactor.run(5000)
+        if count <= 0:
+            break
+
+    count.should.be.equal(0)

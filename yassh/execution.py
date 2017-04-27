@@ -1,12 +1,12 @@
 import logging
-import pexpect
 import signal
 import weakref
 import uuid
+import pexpect
 
 from .exceptions import AlreadyStartedException
 
-_logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Execution(object):
@@ -33,7 +33,7 @@ class Execution(object):
 
         self.__register_finalize()
 
-        _logger.debug('created "%s"', self)
+        LOGGER.debug('created "%s"', self)
 
     def __del__(self):
         '''
@@ -57,8 +57,9 @@ class Execution(object):
 
     def __register_finalize(self):
         weakself = weakref.ref(self)
-        def on_exit(): weakself().__finalize()
-        self.register_exit_monitor(on_exit)
+        def _on_exit():
+            weakself().__finalize()
+        self.register_exit_monitor(_on_exit)
 
     def __finalize(self):
         if not self.started():
@@ -74,9 +75,9 @@ class Execution(object):
 
         self.__exec = None
 
-        _logger.debug('finalized %s (%d)', self, self.__result)
+        LOGGER.debug('finalized %s (%d)', self, self.__result)
 
-    def _start(self, cmd, args=[]):
+    def _start(self, cmd, args=None):
         '''
         Start the execution.
         '''
@@ -84,40 +85,46 @@ class Execution(object):
             raise AlreadyStartedException()
 
         self.__result = None
-        self.__exec = pexpect.spawnu(cmd, args)
+        self.__exec = pexpect.spawnu(cmd, args or [])
 
         self.__reactor.register_execution(self)
 
-        _logger.debug('started %s', self)
+        LOGGER.debug('started %s', self)
 
     def _terminate(self):
         '''
         The execution is killed but any pending monitor(s)
-        can still be called (e.g. on_exit)
+        can still be called (e.g. on_exit).
         '''
         if not self.started():
             return
 
         self.__exec.kill(signal.SIGTERM)
 
-        _logger.debug('terminated %s', self)
+        LOGGER.debug('terminated %s', self)
 
     def _send_eof(self):
         '''
         The execution is killed but any pending monitor(s)
-        can still be called (e.g. on_exit)
+        can still be called (e.g. on_exit).
         '''
         if not self.started():
             return
 
         self.__exec.sendeof()
 
-        _logger.debug('terminated %s', self)
+        LOGGER.debug('terminated %s', self)
+
+    def start(self):
+        '''
+        Start the execution.
+        '''
+        raise NotImplementedError
 
     @property
     def result(self):
         '''
-        The return code of the execution
+        The return code of the execution.
         '''
         return self.__result
 
@@ -149,8 +156,8 @@ class Execution(object):
         '''
         self.__monitors.setdefault(pattern, []).append(callback)
 
-        _logger.debug('registered monitor "%s" on %s',
-                      self.__pattern_name(pattern), self)
+        LOGGER.debug('registered monitor "%s" on %s',
+                     self.__pattern_name(pattern), self)
 
     def register_exit_monitor(self, callback):
         '''
@@ -194,14 +201,15 @@ class Execution(object):
         return str(self.__id)
 
     def __invoke_callbacks(self, matched_pattern):
-        _logger.debug('matched monitor "%s" on %s',
-                      self.__pattern_name(matched_pattern),
-                      self)
+        LOGGER.debug('matched monitor "%s" on %s',
+                     self.__pattern_name(matched_pattern),
+                     self)
 
         for callback in self.__monitors[matched_pattern]:
             callback()
 
-    def __pattern_name(self, monitor):
+    @staticmethod
+    def __pattern_name(monitor):
         if monitor is pexpect.EOF:
             return u'@eof@'
         return monitor

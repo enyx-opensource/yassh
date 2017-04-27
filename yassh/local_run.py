@@ -1,11 +1,8 @@
 import logging
-from locale import getpreferredencoding
-
-from .exceptions import AlreadyStartedException
 from .execution import Execution
 from .reactor import Reactor
 
-_logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class LocalRun(Execution):
@@ -25,7 +22,7 @@ class LocalRun(Execution):
 
         self.__cmd = cmd.replace(u'"', u'\\"')
 
-        _logger.debug('created local run "%s"', cmd)
+        LOGGER.debug('created local run "%s"', cmd)
 
     def start(self):
         '''
@@ -54,11 +51,11 @@ def local_run(cmd, logfile=None, ms_timeout=-1):
     :rtype: int
     :return: The execution result code
     '''
-    r = Reactor()
-    c = LocalRun(r, cmd, logfile)
+    reactor = Reactor()
+    proc = LocalRun(reactor, cmd, logfile)
 
-    with c:
-        while r.run(ms_timeout) > 0:
+    with proc:
+        while reactor.run(ms_timeout) > 0:
             pass
 
-    return c.result
+    return proc.result

@@ -1,2 +1,7 @@
 [run]
-source = yassh/
+source =
+    yassh/
+
+[report]
+exclude_lines =
+    raise NotImplementedError
