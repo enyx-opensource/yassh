@@ -57,8 +57,10 @@ class Execution(object):
 
     def __register_finalize(self):
         weakself = weakref.ref(self)
+
         def _on_exit():
             weakself().__finalize()
+
         self.register_exit_monitor(_on_exit)
 
     def __finalize(self):

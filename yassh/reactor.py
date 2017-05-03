@@ -43,6 +43,15 @@ class Reactor(object):
 
         LOGGER.debug('unregistered %s', cmd)
 
+    def _process_cmd_output(self, handle):
+        weakcmd = self.fd_to_cmd.get(handle, None)
+
+        cmd = weakcmd() if weakcmd else None
+
+        if cmd:
+            LOGGER.debug('%s has new output', cmd)
+            cmd.process_output()
+
     def run(self, ms_timeout):
         '''
         Wait `ms_timeout` for some registered execution(s) to generate
@@ -57,12 +66,6 @@ class Reactor(object):
 
         count = self.poller.poll(ms_timeout)
         for handle, __ in count:
-            weakcmd = self.fd_to_cmd.get(handle, None)
-
-            cmd = weakcmd() if weakcmd else None
-
-            if cmd:
-                LOGGER.debug('%s has new output', cmd)
-                cmd.process_output()
+            self._process_cmd_output(handle)
 
         return len(count) or -errno.ETIMEDOUT
