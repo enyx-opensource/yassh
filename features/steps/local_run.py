@@ -24,8 +24,9 @@ def step_impl(context, command, name):
 
     c = LocalRun(context.reactor, command, logfile=logfile)
 
-    def on_exit(): context.results[name] = c.result
-    c.register_exit_monitor(on_exit)
+    def _on_exit(run):
+        context.results[name] = c.result
+    c.register_exit_monitor(_on_exit)
 
     context.executions[name] = c
 

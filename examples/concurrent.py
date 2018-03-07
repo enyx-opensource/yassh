@@ -1,5 +1,5 @@
 import logging
-from yassh import Reactor, RemoteRun, LocalRun
+from yassh import Reactor, LocalRun
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -10,11 +10,11 @@ c3 = LocalRun(r, 'echo "finished" && sleep 1')
 
 for c in [c1, c2, c3]:
     # Raise if the process failed.
-    def raise_on_failure():
+    def _raise_on_failure(run):
         if not c.result:
             raise Exception('{0} failed'.format(c))
 
-    c.register_exit_monitor(raise_on_failure)
+    c.register_exit_monitor(_raise_on_failure)
     c.start()
 
 

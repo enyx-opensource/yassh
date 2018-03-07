@@ -10,21 +10,27 @@ c2 = LocalRun(r, 'echo ok')
 c3 = RemoteRun(r, remote, 'echo "finished" && sleep 1')
 
 
-def start_c2():
+def start_c2(run):
     # Start cmd2 when cmd1 complete
     c2.start()
+
+
 c1.register_exit_monitor(start_c2)
 
 
-def start_c3():
+def start_c3(run):
     # Start cmd3 when cmd2 complete
     c3.start()
+
+
 c2.register_monitor(u'ok', start_c3)
 
 
-def on_c3_finished():
+def on_c3_finished(run):
     # Print dummy message when c3 is near terminaison
     print('c3 almost finished')
+
+
 c3.register_monitor(u'finished', on_c3_finished)
 
 

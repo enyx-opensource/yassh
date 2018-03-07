@@ -1,5 +1,4 @@
 from behave import *
-import sure
 
 import yassh
 
@@ -16,27 +15,27 @@ def step_impl(context, name):
 
 @step(u'the execution "{name}" is started when "{other}" terminates')
 def step_impl(context, name, other):
-    def on_exit():
+    def _on_exit(run):
         context.executions.get(name).start()
 
-    context.executions.get(other).register_exit_monitor(on_exit)
+    context.executions.get(other).register_exit_monitor(_on_exit)
 
 
 @step(u'the execution "{name}" is stopped when "{other}" terminates')
 def step_impl(context, name, other):
-    def on_exit():
+    def _on_exit(run):
         context.executions.get(name).stop()
 
-    context.executions.get(other).register_exit_monitor(on_exit)
+    context.executions.get(other).register_exit_monitor(_on_exit)
 
 
 @step(u'the execution "{name}" is monitored for "{pattern}" pattern')
 def step_impl(context, name, pattern):
-    def on_match():
+    def _on_match(run):
         count = context.monitors.get(pattern, 0) + 1
         context.monitors[pattern] = count
 
-    context.executions.get(name).register_monitor(pattern, on_match)
+    context.executions.get(name).register_monitor(pattern, _on_match)
 
 
 @step(u'the executions strings are different')

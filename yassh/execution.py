@@ -1,6 +1,5 @@
 import logging
 import signal
-import weakref
 import uuid
 import pexpect
 
@@ -56,10 +55,8 @@ class Execution(object):
         return False
 
     def __register_finalize(self):
-        weakself = weakref.ref(self)
-
-        def _on_exit():
-            weakself().__finalize()
+        def _on_exit(run):
+            run.__finalize()
 
         self.register_exit_monitor(_on_exit)
 
@@ -208,7 +205,7 @@ class Execution(object):
                      self)
 
         for callback in self.__monitors[matched_pattern]:
-            callback()
+            callback(self)
 
     @staticmethod
     def __pattern_name(monitor):
