@@ -5,5 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.0.0] - 2018-03-07
 ### Changed
 - Attached monitor callback receives the associated runner as argument.
