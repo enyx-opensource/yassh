@@ -37,20 +37,20 @@ class Execution(object):
 
     def __del__(self):
         '''
-        Stop the execution uppon destruction.
+        Stop the execution upon destruction.
         '''
         self.__finalize()
 
     def __enter__(self):
         '''
-        Start the execution uppon context enter.
+        Start the execution upon context enter.
         '''
         self.start()
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
         '''
-        Stop the execution uppon context exit.
+        Stop the execution upon context exit.
         '''
         self.__finalize()
         return False
@@ -192,10 +192,10 @@ class Execution(object):
 
     def __str__(self):
         '''
-        Return the string represensation of the execution.
+        Return the string representation of the execution.
 
         :rtype: str
-        :return: A string represensation of the execution
+        :return: A string representation of the execution
         '''
         return 'execution <{0}>'.format(repr(self))
 
