@@ -30,6 +30,7 @@ class Execution(object):
 
         self.__result = None
 
+        self.__register_new_line_monitor()
         self.__register_finalize()
 
         LOGGER.debug('created "%s"', self)
@@ -53,6 +54,12 @@ class Execution(object):
         '''
         self.__finalize()
         return False
+
+    def __register_new_line_monitor(self):
+        def _on_new_line(run):
+            pass
+
+        self.register_monitor(u'\n', _on_new_line)
 
     def __register_finalize(self):
         def _on_exit(run):
@@ -152,6 +159,8 @@ class Execution(object):
 
         :param str pattern: A pattern to match
         :param callable callback: A callback to invoke
+
+        .. note:: The `pattern` can't match multi-lines execution output.
         '''
         self.__monitors.setdefault(pattern, []).append(callback)
 
