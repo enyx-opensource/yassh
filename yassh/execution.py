@@ -220,4 +220,4 @@ class Execution(object):
     def __pattern_name(monitor):
         if monitor is pexpect.EOF:
             return u'@eof@'
-        return monitor
+        return repr(monitor)
