@@ -59,7 +59,7 @@ class Execution(object):
         def _on_new_line(run):
             pass
 
-        self.register_monitor(u'\n', _on_new_line)
+        self.register_monitor(u'\r\n', _on_new_line)
 
     def __register_finalize(self):
         def _on_exit(run):
@@ -91,7 +91,9 @@ class Execution(object):
             raise AlreadyStartedException()
 
         self.__result = None
-        self.__exec = pexpect.spawnu(cmd, args or [])
+        self.__exec = pexpect.spawnu(cmd,
+                                     args or [],
+                                     logfile=self.__logfile)
 
         self.__reactor.register_execution(self)
 
@@ -185,9 +187,6 @@ class Execution(object):
         if index:
             # ssh.before seems only valid when something
             # other that timeout matched.
-            if self.__logfile:
-                self.__logfile.write(self.__exec.before)
-
             self.__invoke_callbacks(patterns[index])
 
     def __str__(self):
